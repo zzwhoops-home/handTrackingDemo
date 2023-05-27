@@ -1,0 +1,4 @@
+repository "HandTrackingDemo@zzwhoopsOrganization@cloud"
+  path "/"
+    br "/main"
+    co "/main"
