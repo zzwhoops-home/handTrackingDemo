@@ -13,15 +13,14 @@ public class HandTracking : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        string data = null;
-        if(udpRecieve)
-            data = udpRecieve.data;
-        if(!data.Equals(null)){
+        string data = udpRecieve.data;
+        if(!string.IsNullOrEmpty(data) || data.Length != 0){
+            print(data.Length);
             data = data.Remove(0, 1);
             data = data.Remove(data.Length-1, 1);
 
             string[] points = data.Split(",");
-            print(points);
+            // print(points);
 
             for(int i=0; i<21; ++i){
                 
@@ -30,6 +29,7 @@ public class HandTracking : MonoBehaviour
                 float z = float.Parse(points[i*3+2]) / 100;
                 
                 handPoints[i].transform.localPosition = new Vector3(x, y, z);
+                // print(handPoints[0].transform.localPosition.z);
             }
         }
         
