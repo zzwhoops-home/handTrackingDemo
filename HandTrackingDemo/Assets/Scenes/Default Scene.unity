@@ -1129,6 +1129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 731190514}
   - component: {fileID: 731190515}
+  - component: {fileID: 731190516}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1167,6 +1168,41 @@ MonoBehaviour:
   startRecieving: 1
   printToConsole: 0
   data: 
+--- !u!114 &731190516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731190513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aee22b170244b774b9876965439d1283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  udpRecieve: {fileID: 731190515}
+  handPoints:
+  - {fileID: 1590213895}
+  - {fileID: 1738646942}
+  - {fileID: 990300386}
+  - {fileID: 1058226075}
+  - {fileID: 364219561}
+  - {fileID: 1127475485}
+  - {fileID: 1897837050}
+  - {fileID: 622982585}
+  - {fileID: 150717807}
+  - {fileID: 722674061}
+  - {fileID: 2117422028}
+  - {fileID: 805547679}
+  - {fileID: 1419700922}
+  - {fileID: 1829179009}
+  - {fileID: 2082884568}
+  - {fileID: 1837182737}
+  - {fileID: 1810520402}
+  - {fileID: 992297639}
+  - {fileID: 1321988006}
+  - {fileID: 1155024568}
+  - {fileID: 1283691410}
 --- !u!1 &771765810
 GameObject:
   m_ObjectHideFlags: 0
