@@ -11,8 +11,8 @@ public class UDPReceive : MonoBehaviour
     Thread receiveThread;
     UdpClient client; 
     public int port = 5052;
-    public bool startRecieving = true;
-    public bool printToConsole = false;
+    public bool startReceiving = true;
+    public bool printToConsole = true;
     public string data;
 
 
@@ -31,7 +31,7 @@ public class UDPReceive : MonoBehaviour
     {
 
         client = new UdpClient(port);
-        while (startRecieving)
+        while (startReceiving)
         {
 
             try
