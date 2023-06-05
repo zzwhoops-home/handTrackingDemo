@@ -13,6 +13,7 @@ public class HandTracking : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
+        // constantly update received data from local server
         string data = udpRecieve.data;
         if(!string.IsNullOrEmpty(data) || data.Length != 0){
             print(data.Length);
@@ -22,6 +23,12 @@ public class HandTracking : MonoBehaviour
             string[] points = data.Split(",");
             // print(points);
 
+            /*
+                ok ideas i will get to: make the hand always the same size by using the size of the bounding box because as it gets closer to the camera it gets bigger
+                so send the entire dict of info to the server to process
+                find the center of the hand
+                make some magic shooty game
+            */
             for(int i=0; i<21; ++i){
                 
                 float x = -1 * (3 - float.Parse(points[i*3]) / 100);
