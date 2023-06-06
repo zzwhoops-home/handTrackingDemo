@@ -15,11 +15,13 @@ public class HandTracking : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        // constantly update received data from local server (IDK HOW TO DO THIS)
+        // constantly update received data from local server
         string data = udpRecieve.data;
-        var jsonObject = JsonUtility.FromJson<String>(data);
 
         if(!string.IsNullOrEmpty(data) || data.Length != 0){
+            print(data.Length);
+            data = data.Remove(0, 1);
+            data = data.Remove(data.Length-1, 1);
 
             string[] points = data.Split(",");
             // print(points);
