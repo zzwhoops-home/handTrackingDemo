@@ -5,7 +5,8 @@ import socket
 import json
 
 cap = cv2.VideoCapture(0) # uncomment if you have webcam
-# cap = cv2.VideoCapture("http://10.0.0.115:4747/video") # ONLY OPENS UP WHEN ONE INSTANCE OF THIS IS OPEN! DO NOT OPEN IN BROWSER!
+if not cap.isOpened():
+    cap = cv2.VideoCapture("http://10.0.0.115:4747/video") # ONLY OPENS UP WHEN ONE INSTANCE OF THIS IS OPEN! DO NOT OPEN IN BROWSER!
 IMG_HEIGHT = 720
 IMG_WIDTH = 1280 
 cap.set(3, IMG_WIDTH)
