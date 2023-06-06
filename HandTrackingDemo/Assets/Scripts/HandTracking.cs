@@ -16,7 +16,7 @@ public class HandTracking : MonoBehaviour
         // constantly update received data from local server
         string data = udpRecieve.data;
         if(!string.IsNullOrEmpty(data) || data.Length != 0){
-            print(data.Length);
+            print(data);
             data = data.Remove(0, 1);
             data = data.Remove(data.Length-1, 1);
 

@@ -9,10 +9,10 @@ public class UDPReceive : MonoBehaviour
 {
 
     Thread receiveThread;
-    UdpClient client; 
+    UdpClient client;
     public int port = 5052;
     public bool startReceiving = true;
-    public bool printToConsole = true;
+    public bool printToConsole = false;
     public string data;
 
 
@@ -21,6 +21,7 @@ public class UDPReceive : MonoBehaviour
 
         receiveThread = new Thread(
             new ThreadStart(ReceiveData));
+        // so game can keep running even if packets are not sent
         receiveThread.IsBackground = true;
         receiveThread.Start();
     }
@@ -36,11 +37,14 @@ public class UDPReceive : MonoBehaviour
 
             try
             {
+                // receive from any IP (very secure!!!)
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] dataByte = client.Receive(ref anyIP);
-                data = Encoding.UTF8.GetString(dataByte);
 
-                if (printToConsole) { print(data); }
+                // receive JSON data and format accordingly
+                string jsonData = Encoding.UTF8.GetString(dataByte);
+
+                if (printToConsole) { print(jsonData); }
             }
             catch (Exception err)
             {
