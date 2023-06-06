@@ -42,9 +42,9 @@ public class UDPReceive : MonoBehaviour
                 byte[] dataByte = client.Receive(ref anyIP);
 
                 // receive JSON data and format accordingly
-                string jsonData = Encoding.UTF8.GetString(dataByte);
+                data = Encoding.UTF8.GetString(dataByte);
 
-                if (printToConsole) { print(jsonData); }
+                if (printToConsole) { print(data); }
             }
             catch (Exception err)
             {
