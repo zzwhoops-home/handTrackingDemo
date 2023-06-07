@@ -59,25 +59,39 @@ while(True):
         if aspectRatio > 1:
             k = imgSize / h
             wCal = math.ceil(k * w)
-            imgResize = cv2.resize(imgCrop, (wCal, imgSize))
+            try:
+                imgResize = cv2.resize(imgCrop, (wCal, imgSize))
+            except:
+                pass
             imgResizeShape = imgResize.shape
             wGap = math.ceil((imgSize - wCal) / 2)
-            imgWhite[:, wGap:wCal + wGap] = imgResize
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            try:
+                imgWhite[:, wGap:wCal + wGap] = imgResize
+            except:
+                print("hand out of range!")
+                pass
+            # prediction, index = classifier.getPrediction(imgWhite, draw=False)
             
-            print(labels[index])
+            # print(labels[index])
 
         else:
             k = imgSize / w
             hCal = math.ceil(k * h)
-            imgResize = cv2.resize(imgCrop, (imgSize, hCal))
+            try:
+                imgResize = cv2.resize(imgCrop, (imgSize, hCal))
+            except:
+                pass
             imgResizeShape = imgResize.shape
             hGap = math.ceil((imgSize - hCal) / 2)
-            imgWhite[hGap:hCal + hGap, :] = imgResize
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            try:
+                imgWhite[hGap:hCal + hGap, :] = imgResize
+            except:
+                print("hand out of range!")
+                pass
+            # prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
-        cv2.imshow("ImageCrop", imgCrop)
-        cv2.imshow("ImageWhite", imgWhite)
+        # cv2.imshow("ImageCrop", imgCrop)
+        # cv2.imshow("ImageWhite", imgWhite)
 
 
         # get list of landmarks, add to data object
@@ -87,7 +101,7 @@ while(True):
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
 
         sock.sendto(str.encode(str(data)), serverAddressPort)
-        sock.sendto(str.encode(str(data)), serverAddressPort2)
+        # sock.sendto(str.encode(str(data)), serverAddressPort2)
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
