@@ -1,18 +1,18 @@
 {
-    "name": "PlayerControls",
+    "name": "GameControls",
     "maps": [
         {
             "name": "Turn",
             "id": "fd51ddb3-a778-4fde-982b-8c0c2b8245bb",
             "actions": [
                 {
-                    "name": "Left",
-                    "type": "Button",
+                    "name": "Right",
+                    "type": "Value",
                     "id": "7ec03db6-9fb5-4a6a-b8be-396ec62dc262",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -23,29 +23,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Right",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
+                    "name": "Negative",
                     "id": "b94600a8-3a49-43fc-8e77-b38be00f1222",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Right",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "positive",
+                    "name": "Positive",
                     "id": "d01e8a4e-173f-4847-a63b-494aaa15a316",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Right",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -56,7 +56,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Right",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -67,7 +67,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Right",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -78,7 +78,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left",
+                    "action": "Right",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
