@@ -33,12 +33,20 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _NormalFromTexture_271cdb7cfdd54e51b82facad0f3d96f4_Texture_0:
+        m_Texture: {fileID: 2800000, guid: 9ed4df50a42536d49b876fd987281035, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _NormalFromTexture_a8301bdfd9434627b0267e56f3b805df_Texture_0:
         m_Texture: {fileID: 2800000, guid: 36c6974090f31f148be567b973268e1f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_1177b48b898f4477b7ba6a1e03b48884_Texture_1:
         m_Texture: {fileID: 2800000, guid: 51118003a168f124faa8a990ba6178d9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_74268851d5f74e40a6762f48bcd5c7e5_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 9b3782a467e36f84a8f113e5c0b3555d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_87f320ee0dea47408b2e78f6ad112475_Texture_1:
@@ -62,7 +70,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _WalkwayTexture:
-        m_Texture: {fileID: 2800000, guid: 7677996a1803bb542b25e300c49a61f0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1726ac0d5ff1298489c57217f556c3a7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _WalkwayTexture_1:
@@ -84,11 +92,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _BottomOpacity: 0.23
+    - _Contrast: 1.7
     - _NormalOffset: 0.2
     - _NormalStrength: 20
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _TopOpacity: 1.51
+    - _Saturation: 0
+    - _Temperature: 0
+    - _Tint: 0
+    - _TopOpacity: 1.8
     m_Colors:
     - _Bottom_Color: {r: 1, g: 0, b: 0, a: 1}
     - _Color: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 0}

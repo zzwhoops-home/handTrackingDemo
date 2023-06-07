@@ -1,55 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using IGameControlsActions;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using TMPro;
 
-public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls.ITurnActions
-{    
-    GameControls controls;
-    public Camera cam;
-
-    public void OnEnable()
-    {
-        if (controls == null)
-        {
-            controls = new GameControls();
-            // Tell the "gameplay" action map that we want to get told about
-            // when actions get triggered.
-            controls.Turn.SetCallbacks(this);
-        }
-        controls.Turn.Enable();
-    }
-
-    public void OnDisable()
-    {
-        controls.Turn.Disable();
-    }    
-    
-    public void OnRight(InputAction.CallbackContext context)
-    {
-        if (context.started) {
-            // 'Use' code here.
-            float turn = context.ReadValue<float>();
-            if (turn == -1.0f) {
-                // rotate 90 deg left
-                cam.transform.Rotate(Vector3.up, -90f, Space.World);
-            } else if (turn == 1.0f) {
-                // rotate 90 deg right
-                cam.transform.Rotate(Vector3.up, 90f, Space.World);
-            }
-        }
-    }
+public class PlayerController : MonoBehaviour
+{
+    public float maxHealth = 100.0f;
+    private float health;
+    public float maxEnergy = 200.0f;
+    private float energy;
+    public TextMeshProUGUI healthText;
+    public TextMeshProUGUI energyText;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // at the start, player starts at max HP
+        health = maxHealth;
+        energy = maxEnergy;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        healthText.text = string.Format("Health: {0}", health);
+        energyText.text = string.Format("Energy: {0}", energy);
     }
 }
