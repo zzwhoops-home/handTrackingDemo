@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 from cvzone.HandTrackingModule import HandDetector
+from cvzone.ClassificationModule import Classifier
 import socket
 import json
 import numpy as np
@@ -20,6 +21,7 @@ if not cap.isOpened():
     
 # DRAW BOTH HANDS ON SCREEN
 detector = HandDetector(maxHands=1, detectionCon=0.8)
+classifier = Classifier("./models/converted_keras\keras_model.h5", "./models/converted_keras\labels.txt")
 offset = 20
 imgSize = 300
 
@@ -27,9 +29,12 @@ imgSize = 300
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
 
+serverAddressPort2 = ("127.0.0.1", 5053)
+
 TO_TRAIN = "hello"
 folder = f"./train_data/{TO_TRAIN}"
 counter = 0
+labels = ["hello", "thumbs_up"]
 
 while(True):
     success, img = cap.read()
@@ -58,6 +63,9 @@ while(True):
             imgResizeShape = imgResize.shape
             wGap = math.ceil((imgSize - wCal) / 2)
             imgWhite[:, wGap:wCal + wGap] = imgResize
+            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            
+            print(labels[index])
 
         else:
             k = imgSize / w
@@ -66,6 +74,7 @@ while(True):
             imgResizeShape = imgResize.shape
             hGap = math.ceil((imgSize - hCal) / 2)
             imgWhite[hGap:hCal + hGap, :] = imgResize
+            prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
         cv2.imshow("ImageCrop", imgCrop)
         cv2.imshow("ImageWhite", imgWhite)
@@ -78,6 +87,7 @@ while(True):
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
 
         sock.sendto(str.encode(str(data)), serverAddressPort)
+        sock.sendto(str.encode(str(data)), serverAddressPort2)
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
