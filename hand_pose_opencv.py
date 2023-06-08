@@ -25,17 +25,6 @@ detector = HandDetector(maxHands=1, detectionCon=0.8)
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape
 
-model = Sequential([
-    InputLayer(input_shape=(21, 3)),
-    Dense(64, activation='relu'),
-    Dense(32, activation='relu'),
-    Dense(5, activation='relu'),
-    Reshape((105,)),
-    Dense(2, activation='softmax')
-])
-model = load_model("./models/EightMovements_500steps.h5")
-
-print(model.summary())
 offset = 20
 imgSize = 300
 
@@ -43,15 +32,32 @@ imgSize = 300
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
 
-labels = ['at_screen', 'closed_fist', 'neutral', 'ok', 'peace', 'pointer_left', 'pointer_right', 'thumbs_up']
-label_map = {'at_screen':0, 'closed_fist':1, 'neutral':2, 'ok':3, 'peace':4, 'pointer_left':5, 'pointer_right':6, 'thumbs_up':7}
-TO_TRAIN = labels[7]
+labels = ['at_screen', 'neutral', 'ok', 'pointer_left', 'pointer_right']
+
+model = Sequential([
+    InputLayer(input_shape=(21, 3)),
+    Dense(64, activation='relu'),
+    Dense(32, activation='relu'),
+    Dense(5, activation='relu'),
+    Reshape((105,)),
+    Dense(64, activation='relu'),
+    Dense(32, activation='relu'),
+    Dense(16, activation='relu'),
+    Dense(len(labels), activation='softmax')
+])
+
+print(model.summary())
+pose_num = 2
+TO_TRAIN = labels[pose_num]
+NUM_IMAGES_RECORD = 200
 TRAINING = False
 
 if TRAINING:
     print("======================")
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
+else:
+    model = load_model("./models/FiveMovements_50000_steps.h5")
 folder = f"./train_data_points/"
 counter = 0
 
@@ -125,12 +131,12 @@ while(True):
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
-    if key == ord("s") and TRAINING:
+    if (key == ord("s") or key == 32) and TRAINING:
         counter += 1
         lmList = np.array(lmList, dtype=np.uint8)
         np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), lmList)
         print(f"Count:{counter}")
-        if counter >= 100:
+        if counter >= NUM_IMAGES_RECORD:
             break
     if key & 0xFF == ord('q'):
         break
