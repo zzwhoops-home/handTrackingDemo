@@ -9,6 +9,7 @@ public class SpawnMonsters : MonoBehaviour
     public GameObject[] monsters;
     private int round = 0;
     public int numRounds = 10;
+    public float spawnRadius = 0.5f;
     private bool roundEnd = false;
 
     // Start is called before the first frame update
@@ -30,8 +31,12 @@ public class SpawnMonsters : MonoBehaviour
                 // spawn from random spawnpoint in world
                 int spawn = Random.Range(0, 4);
                 Transform spawnPoint = spawnPoints[spawn].transform;
+                
+                // add randomness in spawn
+                Vector3 randomSpawnPoint = spawnPoint.position + new Vector3(Random.Range(-spawnRadius, spawnRadius), 0f, Random.Range(-spawnRadius, spawnRadius));
+                
                 // spawn monster
-                Instantiate(monsters[0], spawnPoint.position, Quaternion.identity);
+                Instantiate(monsters[0], randomSpawnPoint, Quaternion.identity);
                 yield return new WaitForSeconds(0.25f);
             }
             yield return new WaitUntil(() => roundEnd);
