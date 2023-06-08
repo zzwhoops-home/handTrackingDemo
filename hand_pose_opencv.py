@@ -1,13 +1,13 @@
 import cv2
 import mediapipe as mp
 from cvzone.HandTrackingModule import HandDetector
-from cvzone.ClassificationModule import Classifier
 import socket
 import json
 import numpy as np
 import math
 import time
-
+import os
+from keras.models import load_model
 
 cap = cv2.VideoCapture(0) # uncomment if you have webcam
 if not cap.isOpened():
@@ -21,6 +21,21 @@ if not cap.isOpened():
     
 # DRAW BOTH HANDS ON SCREEN
 detector = HandDetector(maxHands=1, detectionCon=0.8)
+
+from keras.models import Sequential
+from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape
+
+model = Sequential([
+    InputLayer(input_shape=(21, 3)),
+    Dense(64, activation='relu'),
+    Dense(32, activation='relu'),
+    Dense(5, activation='relu'),
+    Reshape((105,)),
+    Dense(2, activation='softmax')
+])
+model = load_model("./models/okHello_500steps.h5")
+
+print(model.summary())
 offset = 20
 imgSize = 300
 
@@ -28,8 +43,9 @@ imgSize = 300
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
 
-TO_TRAIN = "hello"
-folder = f"./train_data/{TO_TRAIN}"
+poses_mapping = {0:'ok', 1:'peace'}
+TO_TRAIN = "peace"
+folder = f"./train_data_points/"
 counter = 0
 labels = ["hello", "thumbs_up"]
 
@@ -67,9 +83,8 @@ while(True):
             except:
                 print("hand out of range!")
                 pass
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+
             
-            print(labels[index])
 
         else:
             k = imgSize / w
@@ -85,7 +100,6 @@ while(True):
             except:
                 print("hand out of range!")
                 pass
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
         # cv2.imshow("ImageCrop", imgCrop)
         # cv2.imshow("ImageWhite", imgWhite)
@@ -93,6 +107,9 @@ while(True):
 
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
+        lmList_in = np.expand_dims(np.array(lmList, dtype=np.uint8), axis=0)
+        # prediction = model.predict(lmList_in)
+        # print("PREDICITON: ", poses_mapping[np.argmax(prediction)])
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
         sock.sendto(str.encode(str(data)), serverAddressPort)
@@ -102,8 +119,11 @@ while(True):
     key = cv2.waitKey(1)
     if key == ord("s"):
         counter += 1
-        cv2.imwrite(f'{folder}/Image_w{time.time()}.jpg', imgWhite)
+        lmList = np.array(lmList, dtype=np.uint8)
+        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), lmList)
         print(f"Count:{counter}")
+        if counter > 100:
+            break
     if key & 0xFF == ord('q'):
         break
 
