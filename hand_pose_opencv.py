@@ -70,9 +70,9 @@ while(True):
             except:
                 print("hand out of range!")
                 pass
-            # prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            prediction, index = classifier.getPrediction(imgWhite, draw=False)
             
-            # print(labels[index])
+            print(labels[index])
 
         else:
             k = imgSize / w
@@ -88,7 +88,7 @@ while(True):
             except:
                 print("hand out of range!")
                 pass
-            # prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
         # cv2.imshow("ImageCrop", imgCrop)
         # cv2.imshow("ImageWhite", imgWhite)
@@ -96,10 +96,8 @@ while(True):
 
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
-
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
-
         sock.sendto(str.encode(str(data)), serverAddressPort)
         # sock.sendto(str.encode(str(data)), serverAddressPort2)
     
