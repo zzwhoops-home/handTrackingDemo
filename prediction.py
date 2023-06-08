@@ -21,13 +21,12 @@ if not cap.isOpened():
     
 # DRAW BOTH HANDS ON SCREEN
 detector = HandDetector(maxHands=1, detectionCon=0.8)
-classifier = Classifier("./models/converted_keras\keras_model.h5", "./models/converted_keras\labels.txt")
 offset = 20
 imgSize = 300
 
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-serverAddressPort2 = ("127.0.0.1", 5053)
+serverAddressPort = ("127.0.0.1", 5052)
 
 TO_TRAIN = "hello"
 folder = f"./train_data/{TO_TRAIN}"
@@ -45,49 +44,6 @@ while(True):
     
     if hands:
         hand = hands[0]
-        x, y, w, h = hand['bbox']
-
-        imgWhite = np.ones((imgSize, imgSize, 3), np.uint8) * 255
-        imgCrop = img[y - offset:y + h + offset, x - offset:x + w + offset]
-
-        imgCropShape = imgCrop.shape
-
-        aspectRatio = h / w
-
-        if aspectRatio > 1:
-            k = imgSize / h
-            wCal = math.ceil(k * w)
-            try:
-                imgResize = cv2.resize(imgCrop, (wCal, imgSize))
-            except:
-                pass
-            imgResizeShape = imgResize.shape
-            wGap = math.ceil((imgSize - wCal) / 2)
-            try:
-                imgWhite[:, wGap:wCal + wGap] = imgResize
-            except:
-                print("hand out of range!")
-                pass
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
-            
-            print(labels[index])
-
-        else:
-            k = imgSize / w
-            hCal = math.ceil(k * h)
-            try:
-                imgResize = cv2.resize(imgCrop, (imgSize, hCal))
-            except:
-                pass
-            imgResizeShape = imgResize.shape
-            hGap = math.ceil((imgSize - hCal) / 2)
-            try:
-                imgWhite[hGap:hCal + hGap, :] = imgResize
-            except:
-                print("hand out of range!")
-                pass
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
-
 
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
@@ -97,10 +53,6 @@ while(True):
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
-    if key == ord("s"):
-        counter += 1
-        cv2.imwrite(f'{folder}/Image_w{time.time()}.jpg', imgWhite)
-        print(f"Count:{counter}")
     if key & 0xFF == ord('q'):
         break
 
