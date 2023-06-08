@@ -33,7 +33,7 @@ model = Sequential([
     Reshape((105,)),
     Dense(2, activation='softmax')
 ])
-model = load_model("./models/okHello_500steps.h5")
+model = load_model("./models/EightMovements_500steps.h5")
 
 print(model.summary())
 offset = 20
@@ -43,11 +43,17 @@ imgSize = 300
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
 
-poses_mapping = {0:'ok', 1:'peace'}
-TO_TRAIN = "peace"
+labels = ['at_screen', 'closed_fist', 'neutral', 'ok', 'peace', 'pointer_left', 'pointer_right', 'thumbs_up']
+label_map = {'at_screen':0, 'closed_fist':1, 'neutral':2, 'ok':3, 'peace':4, 'pointer_left':5, 'pointer_right':6, 'thumbs_up':7}
+TO_TRAIN = labels[7]
+TRAINING = False
+
+if TRAINING:
+    print("======================")
+    print(f"RECORDING: {TO_TRAIN}")
+    print("======================")
 folder = f"./train_data_points/"
 counter = 0
-labels = ["hello", "thumbs_up"]
 
 while(True):
     success, img = cap.read()
@@ -108,25 +114,31 @@ while(True):
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
         lmList_in = np.expand_dims(np.array(lmList, dtype=np.uint8), axis=0)
-        prediction = model(lmList_in)
-        print("PREDICITON: ", poses_mapping[np.argmax(prediction)])
+        if not TRAINING:
+            prediction = model(lmList_in)
+            print("PREDICITON: ", labels[np.argmax(prediction)])
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
-        sock.sendto(str.encode(str(data)), serverAddressPort)
+        if not TRAINING:
+            sock.sendto(str.encode(str(data)), serverAddressPort)
         # sock.sendto(str.encode(str(data)), serverAddressPort2)
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
-    if key == ord("s"):
+    if key == ord("s") and TRAINING:
         counter += 1
         lmList = np.array(lmList, dtype=np.uint8)
         np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), lmList)
         print(f"Count:{counter}")
-        if counter > 100:
+        if counter >= 100:
             break
     if key & 0xFF == ord('q'):
         break
 
+if TRAINING:
+    print("======================")
+    print(f"END RECORDING OF: {TO_TRAIN}")
+    print("======================")
 
 cap.release()
 cv2.destroyAllWindows()

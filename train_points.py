@@ -7,8 +7,8 @@ import tqdm
 import numpy as np
 counter = 0
 
-label_map = {'ok':0, 'peace':1}
-pose_class_names = ['ok', 'peace']
+label_map = {'at_screen':0, 'closed_fist':1, 'neutral':2, 'ok':3, 'peace':4, 'pointer_left':5, 'pointer_right':6, 'thumbs_up':7}
+pose_class_names = ['at_screen', 'closed_fist', 'neutral', 'ok', 'peace', 'pointer_left', 'pointer_right', 'thumbs_up']
 print(label_map)
 
 sequences, labels = [], []
@@ -48,20 +48,19 @@ model2 = Sequential([
     Dense(32, activation='relu'),
     Dense(5, activation='relu'),
     Reshape((105,)),
-    Dense(2, activation='softmax')
+    Dense(len(label_map), activation='softmax')
 ])
 
 model2.compile(optimizer="Adam", loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 model2.summary()
 
-model2.fit(X_train, Y_train, epochs=500, verbose=False)
+model2.fit(X_train, Y_train, epochs=10000, verbose=True)
 
-poses_mapping = {0:'ok', 1:'peace'}
 result = model2.predict(X_test)
-print("Predicted pose:", poses_mapping[np.argmax(result[1])])
-print("Actual pose:", poses_mapping[np.argmax(Y_test[1])])
+print("Predicted pose:", pose_class_names[np.argmax(result[1])])
+print("Actual pose:", pose_class_names[np.argmax(Y_test[1])])
 
 print(np.array(X_test).shape)
 print(np.array(Y_test).shape)
 
-# model2.save('./models/okHello_500steps.h5')
+model2.save('./models/EightMovements_500steps.h5')
