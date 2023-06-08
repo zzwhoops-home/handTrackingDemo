@@ -70,7 +70,7 @@ while(True):
             except:
                 print("hand out of range!")
                 pass
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            # prediction, index = classifier.getPrediction(imgWhite, draw=False)
             
             print(labels[index])
 
@@ -88,7 +88,7 @@ while(True):
             except:
                 print("hand out of range!")
                 pass
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            # prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
         # cv2.imshow("ImageCrop", imgCrop)
         # cv2.imshow("ImageWhite", imgWhite)
@@ -99,7 +99,6 @@ while(True):
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
         sock.sendto(str.encode(str(data)), serverAddressPort)
-        # sock.sendto(str.encode(str(data)), serverAddressPort2)
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
