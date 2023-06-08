@@ -108,8 +108,8 @@ while(True):
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
         lmList_in = np.expand_dims(np.array(lmList, dtype=np.uint8), axis=0)
-        # prediction = model.predict(lmList_in)
-        # print("PREDICITON: ", poses_mapping[np.argmax(prediction)])
+        prediction = model(lmList_in)
+        print("PREDICITON: ", poses_mapping[np.argmax(prediction)])
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
         sock.sendto(str.encode(str(data)), serverAddressPort)
