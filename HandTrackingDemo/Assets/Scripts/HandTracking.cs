@@ -9,6 +9,8 @@ public class HandTracking : MonoBehaviour
     // Start is called before the first frame update
     public UDPReceive udpRecieve;
     public GameObject[] handPoints;
+    public GameObject center;
+    public float scaleFactor = 200f;
     private float[] centerFloats;
     void Start(){
         
@@ -26,11 +28,10 @@ public class HandTracking : MonoBehaviour
             string[] points = data.Split(",");
             
             int len = points.Length;
-            string[] centerStrings = points[len - 2].Split(" ");
+            string[] centerStrings = points[len - 2].Trim(' ', '\'').Split(" ");
             string prediction = points[len - 1];
 
             // IMPORTANT: CENTER INFORMATION IS SENT SECOND TO LAST ITEM IN ARRAY, LAST ITEM ARRAY IS STRING PREDICTION
-            
             centerFloats = new float[] {float.Parse(centerStrings[0]), float.Parse(centerStrings[1])};
 
             /*
@@ -39,9 +40,9 @@ public class HandTracking : MonoBehaviour
             */
             for(int i=0; i<21; ++i){
                 
-                float x = -1 * (3 - float.Parse(points[i*3]) / 200);
-                float y = float.Parse(points[i*3+1]) / 200;
-                float z = float.Parse(points[i*3+2]) / 200;
+                float x = -1 * (3 - float.Parse(points[i*3]) / scaleFactor);
+                float y = float.Parse(points[i*3+1]) / scaleFactor;
+                float z = float.Parse(points[i*3+2]) / scaleFactor;
                 
                 handPoints[i].transform.localPosition = new Vector3(x, y, z);
                 // print(handPoints[0].transform.localPosition.z);
