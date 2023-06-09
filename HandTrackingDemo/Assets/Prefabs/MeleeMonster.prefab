@@ -116,3 +116,4 @@ MonoBehaviour:
   speed: 0
   damage: 10
   offset: 0.75
+  health: 20
