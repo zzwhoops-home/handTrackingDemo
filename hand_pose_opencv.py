@@ -31,7 +31,6 @@ imgSize = 300
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
-serverAddressPort2 = ("127.0.0.1", 5053)
 
 labels = ['at_screen', 'neutral', 'ok', 'pointer_left', 'pointer_right']
 
@@ -69,7 +68,9 @@ while(True):
     img = cv2.flip(img, 1)
     hands, img = detector.findHands(img, flipType=False)
 
+    # list of landmarks and center tuple to send
     data = []
+    center = []
     
     if hands:
         hand = hands[0]
@@ -128,10 +129,10 @@ while(True):
             string_pred = labels[np.argmax(prediction)]
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
-        # add "center" landmark to the end
-        data.append(hand["center"])
+        center = list(hand["center"])
+        data.extend([f"{center[0]} {center[1]}", f"{string_pred}"])
+        # send with UDP all in 1 port
         sock.sendto(str.encode(str(data)), serverAddressPort)
-        sock.sendto(str.encode(str(string_pred)), serverAddressPort2)
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)

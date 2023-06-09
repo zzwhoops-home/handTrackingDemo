@@ -9,6 +9,7 @@ public class HandTracking : MonoBehaviour
     // Start is called before the first frame update
     public UDPReceive udpRecieve;
     public GameObject[] handPoints;
+    private float[] centerFloats;
     void Start(){
         
     }
@@ -19,17 +20,21 @@ public class HandTracking : MonoBehaviour
         string data = udpRecieve.data;
 
         if(!string.IsNullOrEmpty(data) || data.Length != 0){
-            print(data.Length);
-            data = data.Remove(0, 1);
-            data = data.Remove(data.Length-1, 1);
+            // remove first and last character, which are "[" and "]" respectively
+            data = data.Trim('[', ']');
 
             string[] points = data.Split(",");
-            // print(points);
+            
+            int len = points.Length;
+            string[] centerStrings = points[len - 2].Split(" ");
+            string prediction = points[len - 1];
+
+            // IMPORTANT: CENTER INFORMATION IS SENT SECOND TO LAST ITEM IN ARRAY, LAST ITEM ARRAY IS STRING PREDICTION
+            
+            centerFloats = new float[] {float.Parse(centerStrings[0]), float.Parse(centerStrings[1])};
 
             /*
                 ok ideas i will get to: make the hand always the same size by using the size of the bounding box because as it gets closer to the camera it gets bigger
-                so send the entire dict of info to the server to process
-                find the center of the hand
                 make some magic shooty game
             */
             for(int i=0; i<21; ++i){
@@ -42,6 +47,8 @@ public class HandTracking : MonoBehaviour
                 // print(handPoints[0].transform.localPosition.z);
             }
         }
-        
+    }
+    public float[] ReturnCenterPoints() {
+        return centerFloats;
     }
 }

@@ -23,11 +23,10 @@ public class FireballShoot : MonoBehaviour
     {
         transform.position += transform.forward * speed * Time.deltaTime;
     }
-    void OnCollisionEnter(Collision collisionInfo)
+    void OnTriggerEnter(Collider other)
     {
-        GameObject colliderObject = collisionInfo.gameObject;
-        if (colliderObject.CompareTag("Monster")) {
-            colliderObject.GetComponent<MeleeMonster>().Damage(damage);
+        if (other.CompareTag("Monster")) {
+            other.GetComponent<MeleeMonster>().Damage(damage);
             Destroy(gameObject);
         }
     }

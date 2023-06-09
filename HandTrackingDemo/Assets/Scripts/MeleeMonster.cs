@@ -38,7 +38,6 @@ public class MeleeMonster : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        print(other);
         if (other.CompareTag("PlayerCollider")) {
             playerController.Damage(damage);
             Destroy(gameObject);

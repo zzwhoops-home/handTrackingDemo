@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     public Camera cam;
     public GameObject firePoint;
     public GameObject fireball;
+    public HandTracking handTracking;
     public ShootFromMouse shootFromMouse;
     public float maxHealth = 100.0f;
     private float health;
@@ -88,7 +89,6 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     private IEnumerator HealPlayer()
     {
         while (true) {
-            print(healingCooldown);
             if (healingCooldown == 0 || healingCooldown - Time.deltaTime <= 0) {
                 if (health + healAmount < maxHealth) {
                     health += healAmount;
