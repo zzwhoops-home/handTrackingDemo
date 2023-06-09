@@ -47,7 +47,7 @@ model = Sequential([
 ])
 
 print(model.summary())
-pose_num = 2
+pose_num = 1
 TO_TRAIN = labels[pose_num]
 NUM_IMAGES_RECORD = 200
 TRAINING = False
@@ -134,7 +134,7 @@ while(True):
     if (key == ord("s") or key == 32) and TRAINING:
         counter += 1
         lmList = np.array(lmList, dtype=np.uint8)
-        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), lmList)
+        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}2_{counter}"), lmList)
         print(f"Count:{counter}")
         if counter >= NUM_IMAGES_RECORD:
             break
