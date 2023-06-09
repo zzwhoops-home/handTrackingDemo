@@ -51,8 +51,6 @@ model = Sequential([
     Dense(5, activation='relu'),
     Reshape((105,)),
     Dense(64, activation='relu'),
-    Dense(32, activation='relu'),
-    Dense(16, activation='relu'),
     Dense(len(label_map), activation='softmax')
 ])
 

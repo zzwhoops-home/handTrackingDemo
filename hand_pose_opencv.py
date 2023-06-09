@@ -31,6 +31,7 @@ imgSize = 300
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
+serverAddressPort2 = ("127.0.0.1", 5053)
 
 labels = ['at_screen', 'neutral', 'ok', 'pointer_left', 'pointer_right']
 
@@ -57,7 +58,7 @@ if TRAINING:
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
 else:
-    model = load_model("./models/FiveMovements_50000_steps.h5")
+    model = load_model("./models/FiveMovements_20000_steps.h5")
 folder = f"./train_data_points/"
 counter = 0
 
@@ -120,15 +121,17 @@ while(True):
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
         lmList_in = np.expand_dims(np.array(lmList, dtype=np.uint8), axis=0)
+        string_pred = None
         if not TRAINING:
             prediction = model(lmList_in)
             print("PREDICITON: ", labels[np.argmax(prediction)])
+            string_pred = labels[np.argmax(prediction)]
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
         # add "center" landmark to the end
         data.append(hand["center"])
         sock.sendto(str.encode(str(data)), serverAddressPort)
-        # sock.sendto(str.encode(str(data)), serverAddressPort2)
+        sock.sendto(str.encode(str(string_pred)), serverAddressPort2)
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)

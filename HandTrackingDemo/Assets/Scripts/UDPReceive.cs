@@ -10,10 +10,13 @@ public class UDPReceive : MonoBehaviour
 
     Thread receiveThread;
     UdpClient client;
+    UdpClient clientPose;
     public int port = 5052;
+    public int portPose = 5053;
     public bool startReceiving = true;
     public bool printToConsole = false;
     public string data;
+    public string dataPose;
 
 
     public void Start()
@@ -32,6 +35,7 @@ public class UDPReceive : MonoBehaviour
     {
 
         client = new UdpClient(port);
+        clientPose = new UdpClient(portPose);
         while (startReceiving)
         {
 
@@ -40,11 +44,16 @@ public class UDPReceive : MonoBehaviour
                 // receive from any IP (very secure!!!)
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] dataByte = client.Receive(ref anyIP);
+                byte[] dataByte2 = clientPose.Receive(ref anyIP);
 
                 // receive JSON data and format accordingly
                 data = Encoding.UTF8.GetString(dataByte);
+                dataPose = Encoding.UTF8.GetString(dataByte2);
 
-                if (printToConsole) { print(data); }
+                if (printToConsole) {
+                    print(data); 
+                    print(dataPose); 
+                }
             }
             catch (Exception err)
             {
