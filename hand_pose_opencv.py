@@ -125,8 +125,9 @@ while(True):
             print("PREDICITON: ", labels[np.argmax(prediction)])
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
-        if not TRAINING:
-            sock.sendto(str.encode(str(data)), serverAddressPort)
+        # add "center" landmark to the end
+        data.append(hand["center"])
+        sock.sendto(str.encode(str(data)), serverAddressPort)
         # sock.sendto(str.encode(str(data)), serverAddressPort2)
     
     cv2.imshow('Image', img)
