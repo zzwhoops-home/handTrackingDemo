@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootFromMouse : MonoBehaviour
+public class ShootFromHand : MonoBehaviour
 {
     public Camera cam;
-    private Ray mouseRay;
+    private Ray handRay;
     private Vector3 direction;
     private Quaternion rotation;
+    public Transform crosshair;
 
     // Start is called before the first frame update
     void Start()
@@ -18,9 +19,9 @@ public class ShootFromMouse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var mousePos = Input.mousePosition;
-        mouseRay = cam.ScreenPointToRay(mousePos);
-        LookMouseDirection(gameObject, mouseRay.direction);
+        var handPos = crosshair.position;
+        handRay = cam.ScreenPointToRay(handPos);
+        LookMouseDirection(gameObject, handRay.direction);
     }
     
     private void LookMouseDirection(GameObject obj, Vector3 destination) {

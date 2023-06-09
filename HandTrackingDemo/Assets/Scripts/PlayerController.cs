@@ -8,12 +8,19 @@ using System;
 
 public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls.IShootActions
 {
-    GameControls controls;
     public Camera cam;
+    private int camWidth = 1280;
+    private int camHeight = 720;
+    private int screenWidth;
+    private int screenHeight;
+
+    GameControls controls;
     public GameObject firePoint;
     public GameObject fireball;
+    public GameObject crosshair;
     public HandTracking handTracking;
-    public ShootFromMouse shootFromMouse;
+    public ShootFromHand shootFromHand;
+
     public float maxHealth = 100.0f;
     private float health;
     public float timeBetweenHealing = 0.5f;
@@ -34,6 +41,10 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
 
         // regenerate health if not recently damaged
         StartCoroutine(HealPlayer());
+
+        // get width and height of player's screen
+        screenWidth = Screen.width;
+        screenHeight = Screen.height;
     }
 
     // Update is called once per frame
@@ -41,8 +52,26 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     {
         healthText.text = string.Format("Health: {0}", health);
         energyText.text = string.Format("Energy: {0}", energy);
+
+        UpdateCrosshair();
     }
 
+    private void UpdateCrosshair()
+    {
+        // get center xy values
+        float[] centerFloats = handTracking.GetCenterPoints();
+        float x = centerFloats[0];
+        float y = centerFloats[1];
+
+        float xPercent = x / camWidth;
+        float yPercent = y / camHeight;
+
+        float crosshairX = xPercent * screenWidth;
+        float crosshairY = screenHeight - (yPercent * screenHeight);
+        print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
+
+        crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
+    }
 
     public void OnEnable()
     {
@@ -67,7 +96,7 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
 
         if (context.started) {
             spell = Instantiate(fireball, firePoint.transform.position, Quaternion.identity);
-            spell.transform.localRotation = shootFromMouse.GetRotation();
+            spell.transform.localRotation = shootFromHand.GetRotation();
         }
     }
 

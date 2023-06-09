@@ -13,7 +13,7 @@ public class HandTracking : MonoBehaviour
     public float scaleFactor = 200f;
     private float[] centerFloats;
     void Start(){
-        
+        centerFloats = new float[] {Screen.width / 2, Screen.height / 2};
     }
 
     // Update is called once per frame
@@ -49,7 +49,7 @@ public class HandTracking : MonoBehaviour
             }
         }
     }
-    public float[] ReturnCenterPoints() {
+    public float[] GetCenterPoints() {
         return centerFloats;
     }
 }

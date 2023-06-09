@@ -9,7 +9,7 @@ public class SpawnMonsters : MonoBehaviour
     public GameObject[] monsters;
     private int round = 0;
     public int numRounds = 10;
-    public float spawnRadius = 0.5f;
+    public float spawnRadius = 3f;
     private bool roundEnd = false;
 
     // Start is called before the first frame update

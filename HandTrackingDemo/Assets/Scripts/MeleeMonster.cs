@@ -6,8 +6,8 @@ public class MeleeMonster : MonoBehaviour
 {
     private GameObject player;
     private PlayerController playerController;
-    public float minSpeed = 3.0f;
-    public float maxSpeed = 3.5f;
+    public float minSpeed = 1.5f;
+    public float maxSpeed = 2.0f;
     [SerializeField]
     private float speed;
     public float damage = 10.0f;
