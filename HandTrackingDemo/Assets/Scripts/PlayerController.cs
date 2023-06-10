@@ -11,6 +11,10 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     public Camera cam;
     private int camWidth = 1280;
     private int camHeight = 720;
+    [Range(-720, 720)]
+    public int crosshairX_adjust;
+    [Range(-1280, 1280)]
+    public int crosshairY_adjust;
     private int screenWidth;
     private int screenHeight;
 
@@ -60,8 +64,8 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     {
         // get center xy values
         float[] centerFloats = handTracking.GetCenterPoints();
-        float x = centerFloats[0];
-        float y = centerFloats[1];
+        float x = centerFloats[0] + crosshairX_adjust;
+        float y = centerFloats[1] + crosshairY_adjust;
 
         float xPercent = x / camWidth;
         float yPercent = y / camHeight;
