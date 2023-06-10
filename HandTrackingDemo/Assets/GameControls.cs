@@ -107,94 +107,6 @@ namespace IGameControlsActions
                     ""isPartOfComposite"": true
                 }
             ]
-        },
-        {
-            ""name"": ""Shoot"",
-            ""id"": ""5d7cce7c-3322-46f6-a4c9-f214691d3ab6"",
-            ""actions"": [
-                {
-                    ""name"": ""Fireball"",
-                    ""type"": ""Button"",
-                    ""id"": ""9b5a41d8-1063-4495-8962-8c86b7da13ee"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""LightningBolt"",
-                    ""type"": ""Button"",
-                    ""id"": ""63ffb7c0-3a15-47fe-b611-7cfb21358e4c"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""LightRay"",
-                    ""type"": ""Button"",
-                    ""id"": ""a5b6f92d-837d-487b-b8a8-39af3167ef50"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Icicle"",
-                    ""type"": ""Button"",
-                    ""id"": ""c307a486-5c35-49b1-9046-577ab77fb896"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""60eb40f5-de96-4622-a773-af26d5498a38"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Fireball"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""63455ff9-496f-4e49-ae6f-28108fcbbbe6"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LightningBolt"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3ec18c6f-c8d9-4a5d-b565-c29233c832ce"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LightRay"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""edf52b83-6eee-46ff-acb6-1621a93ff2af"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Icicle"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": []
@@ -202,12 +114,6 @@ namespace IGameControlsActions
             // Turn
             m_Turn = asset.FindActionMap("Turn", throwIfNotFound: true);
             m_Turn_Right = m_Turn.FindAction("Right", throwIfNotFound: true);
-            // Shoot
-            m_Shoot = asset.FindActionMap("Shoot", throwIfNotFound: true);
-            m_Shoot_Fireball = m_Shoot.FindAction("Fireball", throwIfNotFound: true);
-            m_Shoot_LightningBolt = m_Shoot.FindAction("LightningBolt", throwIfNotFound: true);
-            m_Shoot_LightRay = m_Shoot.FindAction("LightRay", throwIfNotFound: true);
-            m_Shoot_Icicle = m_Shoot.FindAction("Icicle", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -311,86 +217,9 @@ namespace IGameControlsActions
             }
         }
         public TurnActions @Turn => new TurnActions(this);
-
-        // Shoot
-        private readonly InputActionMap m_Shoot;
-        private List<IShootActions> m_ShootActionsCallbackInterfaces = new List<IShootActions>();
-        private readonly InputAction m_Shoot_Fireball;
-        private readonly InputAction m_Shoot_LightningBolt;
-        private readonly InputAction m_Shoot_LightRay;
-        private readonly InputAction m_Shoot_Icicle;
-        public struct ShootActions
-        {
-            private @GameControls m_Wrapper;
-            public ShootActions(@GameControls wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Fireball => m_Wrapper.m_Shoot_Fireball;
-            public InputAction @LightningBolt => m_Wrapper.m_Shoot_LightningBolt;
-            public InputAction @LightRay => m_Wrapper.m_Shoot_LightRay;
-            public InputAction @Icicle => m_Wrapper.m_Shoot_Icicle;
-            public InputActionMap Get() { return m_Wrapper.m_Shoot; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(ShootActions set) { return set.Get(); }
-            public void AddCallbacks(IShootActions instance)
-            {
-                if (instance == null || m_Wrapper.m_ShootActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_ShootActionsCallbackInterfaces.Add(instance);
-                @Fireball.started += instance.OnFireball;
-                @Fireball.performed += instance.OnFireball;
-                @Fireball.canceled += instance.OnFireball;
-                @LightningBolt.started += instance.OnLightningBolt;
-                @LightningBolt.performed += instance.OnLightningBolt;
-                @LightningBolt.canceled += instance.OnLightningBolt;
-                @LightRay.started += instance.OnLightRay;
-                @LightRay.performed += instance.OnLightRay;
-                @LightRay.canceled += instance.OnLightRay;
-                @Icicle.started += instance.OnIcicle;
-                @Icicle.performed += instance.OnIcicle;
-                @Icicle.canceled += instance.OnIcicle;
-            }
-
-            private void UnregisterCallbacks(IShootActions instance)
-            {
-                @Fireball.started -= instance.OnFireball;
-                @Fireball.performed -= instance.OnFireball;
-                @Fireball.canceled -= instance.OnFireball;
-                @LightningBolt.started -= instance.OnLightningBolt;
-                @LightningBolt.performed -= instance.OnLightningBolt;
-                @LightningBolt.canceled -= instance.OnLightningBolt;
-                @LightRay.started -= instance.OnLightRay;
-                @LightRay.performed -= instance.OnLightRay;
-                @LightRay.canceled -= instance.OnLightRay;
-                @Icicle.started -= instance.OnIcicle;
-                @Icicle.performed -= instance.OnIcicle;
-                @Icicle.canceled -= instance.OnIcicle;
-            }
-
-            public void RemoveCallbacks(IShootActions instance)
-            {
-                if (m_Wrapper.m_ShootActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(IShootActions instance)
-            {
-                foreach (var item in m_Wrapper.m_ShootActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_ShootActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public ShootActions @Shoot => new ShootActions(this);
         public interface ITurnActions
         {
             void OnRight(InputAction.CallbackContext context);
-        }
-        public interface IShootActions
-        {
-            void OnFireball(InputAction.CallbackContext context);
-            void OnLightningBolt(InputAction.CallbackContext context);
-            void OnLightRay(InputAction.CallbackContext context);
-            void OnIcicle(InputAction.CallbackContext context);
         }
     }
 }

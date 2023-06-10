@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MeleeMonster : MonoBehaviour
 {
@@ -12,11 +13,16 @@ public class MeleeMonster : MonoBehaviour
     private float speed;
     public float damage = 10.0f;
     public float offset = 0.75f;
-    public float health = 20.0f;
+    public float maxHealth = 20.0f;
+    private float health;
+    public Slider healthBar;
     private Vector3 destination;
     // Start is called before the first frame update
     void Start()
     {
+        health = maxHealth;
+        healthBar.value = 1f;
+
         player = GameObject.FindGameObjectWithTag("Player");
         playerController = player.GetComponent<PlayerController>();
         speed = Random.Range(minSpeed, maxSpeed);
@@ -45,8 +51,9 @@ public class MeleeMonster : MonoBehaviour
     }
     public void Damage(float amount) {
         health -= amount;
-        if (health < 0) {
+        if (health <= 0) {
             Destroy(gameObject);
         }
+        healthBar.value = health / maxHealth;
     }
 }

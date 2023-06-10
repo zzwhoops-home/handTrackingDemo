@@ -71,6 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5144547614961958442}
+  - component: {fileID: 5285649678029249612}
   m_Layer: 0
   m_Name: ElectricArc
   m_TagString: Untagged
@@ -98,6 +99,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5285649678029249612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5144547614961958441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6270fa5c1dd2d4a49a8cdebb5bd962fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7315520362147544425
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,15 +166,21 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 2.5
+      - m_Value: 4
         m_Name: NoiseFrequency
-        m_Overridden: 0
-      - m_Value: 0.4
+        m_Overridden: 1
+      - m_Value: 4
         m_Name: NoiseRoughness
-        m_Overridden: 0
+        m_Overridden: 1
       - m_Value: 3
         m_Name: NoiseLacunarity
-        m_Overridden: 0
+        m_Overridden: 1
+      - m_Value: 0.05
+        m_Name: Thickness
+        m_Overridden: 1
+      - m_Value: 1.5
+        m_Name: NoiseSpeed
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -179,7 +198,10 @@ VisualEffect:
         m_Name: Pos2
         m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0, y: 2.3123403, z: 0.88146424, w: 0}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:

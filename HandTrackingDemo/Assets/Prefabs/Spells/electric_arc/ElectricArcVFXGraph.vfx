@@ -24,22 +24,10 @@ MonoBehaviour:
     - model: {fileID: 8926484042661614555}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661614679}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661614558}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661614603}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661614583}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614626}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614910}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661614738}
@@ -108,12 +96,6 @@ MonoBehaviour:
     - model: {fileID: 8926484042661614825}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661614839}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614841}
-      id: 0
-      isStickyNote: 0
   - title: StartSparks
     position:
       serializedVersion: 2
@@ -128,46 +110,16 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615139}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615102}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615134}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615056}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661614897}
       id: 1
       isStickyNote: 0
     - model: {fileID: 8926484042661615013}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615015}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661615046}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661615017}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615043}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615071}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615089}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615052}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615098}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615054}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661615048}
@@ -184,19 +136,7 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615154}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615156}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661615160}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615175}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615178}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615196}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661614833}
@@ -214,24 +154,6 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615219}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615224}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615226}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615229}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 0}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615240}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615245}
-      id: 0
-      isStickyNote: 0
   stickyNoteInfos: []
   categories: []
   uiBounds:
@@ -239,7 +161,7 @@ MonoBehaviour:
     x: -92
     y: -249
     width: 2957
-    height: 4578
+    height: 4580
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -304,7 +226,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":0.23765791952610017,"g":1.782434344291687,"b":0.0,"a":0.0}'
+      m_SerializableObject: '{"r":0.05612475425004959,"g":2.379689931869507,"b":2.0596377849578859,"a":0.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -2697,7 +2619,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661614842}
     position: {x: 782, y: 1286}
     expandedSlots: []
-    expanded: 0
+    expanded: 1
   - m_Id: 2
     linkedSlots:
     - outputSlot: {fileID: 8926484042661614834}
@@ -2741,7 +2663,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":0.23765791952610017,"g":1.782434344291687,"b":0.0,"a":0.0}'
+      m_SerializableObject: '{"r":0.05612475425004959,"g":2.379689931869507,"b":2.0596377849578859,"a":0.0}'
     m_Space: 2147483647
   m_Property:
     name: o
@@ -5513,7 +5435,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614972}
   m_ExposedName: NoiseOctaves
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 8
   m_Category: 
   m_Min:
     m_Type:
@@ -5593,7 +5515,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614977}
   m_ExposedName: NoiseRoughness
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 9
   m_Category: 
   m_Min:
     m_Type:
@@ -5673,7 +5595,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614982}
   m_ExposedName: NoiseLacunarity
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 10
   m_Category: 
   m_Min:
     m_Type:
@@ -5753,7 +5675,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614994}
   m_ExposedName: NoiseRange
   m_Exposed: 1
-  m_Order: 12
+  m_Order: 11
   m_Category: 
   m_Min:
     m_Type:
@@ -6213,7 +6135,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":0.0,"g":15.999998092651368,"b":3.2670154571533205,"a":1.0}'
+      m_SerializableObject: '{"r":0.0,"g":31.999996185302736,"b":6.534030914306641,"a":1.0}'
     m_Space: 2147483647
   m_Property:
     name: emissiveColor
