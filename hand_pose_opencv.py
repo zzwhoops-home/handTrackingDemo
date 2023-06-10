@@ -26,7 +26,7 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormalization
 
 offset = 20
-imgSize = 200
+IMG_SIZE = 200
 
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -67,7 +67,8 @@ if TRAINING:
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
 elif MODEL_ACTIVE:
-    model = load_model("./models/FiveMovements_50_steps.h5")
+    UPDATE_EPOCH = 400
+    model = load_model(f"./models/FiveMovements_{UPDATE_EPOCH}_steps.h5")
 
 
 while(True):
@@ -85,7 +86,7 @@ while(True):
         hand = hands[0]
         x, y, w, h = hand['bbox']
 
-        imgWhite = np.ones((imgSize, imgSize, 3), np.uint8) * 255
+        imgWhite = np.ones((IMG_SIZE, IMG_SIZE, 3), np.uint8) * 255
         imgCrop = img[y - offset:y + h + offset, x - offset:x + w + offset]
 
         imgCropShape = imgCrop.shape
@@ -93,14 +94,14 @@ while(True):
         aspectRatio = h / w
 
         if aspectRatio > 1:
-            k = imgSize / h
+            k = IMG_SIZE / h
             wCal = math.ceil(k * w)
             try:
-                imgResize = cv2.resize(imgCrop, (wCal, imgSize))
+                imgResize = cv2.resize(imgCrop, (wCal, IMG_SIZE))
             except:
                 pass
             imgResizeShape = imgResize.shape
-            wGap = math.ceil((imgSize - wCal) / 2)
+            wGap = math.ceil((IMG_SIZE - wCal) / 2)
             try:
                 imgWhite[:, wGap:wCal + wGap] = imgResize
             except:
@@ -110,14 +111,14 @@ while(True):
             
 
         else:
-            k = imgSize / w
+            k = IMG_SIZE / w
             hCal = math.ceil(k * h)
             try:
-                imgResize = cv2.resize(imgCrop, (imgSize, hCal))
+                imgResize = cv2.resize(imgCrop, (IMG_SIZE, hCal))
             except:
                 pass
             imgResizeShape = imgResize.shape
-            hGap = math.ceil((imgSize - hCal) / 2)
+            hGap = math.ceil((IMG_SIZE - hCal) / 2)
             try:
                 imgWhite[hGap:hCal + hGap, :] = imgResize
             except:

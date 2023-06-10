@@ -6,6 +6,7 @@ from glob import glob
 import os
 import tqdm
 import numpy as np
+from keras.callbacks import TensorBoard
 
 
 label_map = {'at_screen':0, 'neutral':1, 'peace':2, 'pointer_left':3, 'pointer_right':4}
@@ -43,17 +44,22 @@ print()
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormalization
 
+IMG_SIZE = 200
+
 model = Sequential([
-    InputLayer(input_shape=(200, 200)),
-    Reshape((200 * 200,)),
-    Dense(256, activation='relu'),
-    Dropout(0.3),
+    InputLayer(input_shape=(imgSize, imgSize)),
+    Reshape((imgSize * imgSize,)),
+    Dense(64, activation='relu'),
+    Dropout(0.2),
     BatchNormalization(),
     Dense(32, activation='relu'),
-    Dropout(0.3),
+    Dropout(0.2),
     BatchNormalization(),
     Dense(16, activation='relu'),
-    Dropout(0.3),
+    Dropout(0.2),
+    BatchNormalization(),
+    Dense(8, activation='relu'),
+    Dropout(0.2),
     BatchNormalization(),
     Dense(len(label), activation='softmax')
 ])
@@ -61,12 +67,20 @@ model = Sequential([
 model.compile(optimizer="Adam", loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 model.summary()
 
-LOAD_PREV = False
-EPOCHS = 50
+# ===== HYPERPARAMETERS ===== #
+
 PREV_EPOCHS = 0
+LOAD_PREV = True if PREV_EPOCHS > 0 else False
+
+EPOCHS = 100
 if LOAD_PREV:
     model = load_model(f"models\FiveMovements_{PREV_EPOCHS}_steps.h5")
-model.fit(X_train, Y_train, epochs=EPOCHS, verbose=True)
+
+# ===== HYPERPARAMETERS ===== #
+
+tensorboard_callback = TensorBoard(log_dir='./logs')
+
+model.fit(X_train, Y_train, epochs=EPOCHS, verbose=True, callbacks=[tensorboard_callback])
 
 result = model.predict(X_test)
 print("Predicted pose:", label[np.argmax(result[1])])
