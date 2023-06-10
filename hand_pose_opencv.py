@@ -107,7 +107,7 @@ while(True):
         string_pred = None
         if not TRAINING and MODEL_ACTIVE:
             prediction = model(np.expand_dims(lmListNormalized, axis=0))
-            print("PREDICTON: ", labels[np.argmax(prediction)])
+            print("PREDICTION: ", labels[np.argmax(prediction)])
             string_pred = labels[np.argmax(prediction)]
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
