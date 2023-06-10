@@ -44,11 +44,21 @@ print()
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormalization
 
-IMG_SIZE = 200
+# ===== HYPERPARAMETERS ===== #
+
+IMG_SIZE = 50
+PREV_EPOCHS = 0
+LOAD_PREV = True if PREV_EPOCHS > 0 else False
+
+EPOCHS = 100
+if LOAD_PREV:
+    model = load_model(f"models\FiveMovements_{PREV_EPOCHS}_steps.h5")
+
+# ===== HYPERPARAMETERS ===== #
 
 model = Sequential([
-    InputLayer(input_shape=(imgSize, imgSize)),
-    Reshape((imgSize * imgSize,)),
+    InputLayer(input_shape=(IMG_SIZE, IMG_SIZE)),
+    Reshape((IMG_SIZE * IMG_SIZE,)),
     Dense(64, activation='relu'),
     Dropout(0.2),
     BatchNormalization(),
@@ -67,16 +77,6 @@ model = Sequential([
 model.compile(optimizer="Adam", loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 model.summary()
 
-# ===== HYPERPARAMETERS ===== #
-
-PREV_EPOCHS = 0
-LOAD_PREV = True if PREV_EPOCHS > 0 else False
-
-EPOCHS = 100
-if LOAD_PREV:
-    model = load_model(f"models\FiveMovements_{PREV_EPOCHS}_steps.h5")
-
-# ===== HYPERPARAMETERS ===== #
 
 tensorboard_callback = TensorBoard(log_dir='./logs')
 

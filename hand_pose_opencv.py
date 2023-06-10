@@ -26,14 +26,15 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormalization
 
 # ===== HYPER PARAMETERS ===== #
+IMG_SIZE = 50
+TRAINING = False
+POSE_NUM = 3
+
+NUM_IMAGES_RECORD = 500
+MODEL_ACTIVE = not TRAINING 
+
 counter = 0
 offset = 20
-IMG_SIZE = 50
-TRAINING = TRUE
-POSE_NUM = 2
-TO_TRAIN = labels[POSE_NUM]
-NUM_IMAGES_RECORD = 200
-MODEL_ACTIVE = not TRAINING 
 # ===== HYPER PARAMETERS ===== #
 
 # Comms
@@ -42,6 +43,8 @@ serverAddressPort = ("127.0.0.1", 5052)
 
 folder = f"./train_data_points/"
 labels = ['at_screen', 'neutral', 'peace', 'pointer_left', 'pointer_right']
+TO_TRAIN = labels[POSE_NUM]
+
 for label in labels:
     if not os.path.exists(folder + label):
         os.makedirs(folder + label)
@@ -69,7 +72,7 @@ if TRAINING:
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
 elif MODEL_ACTIVE:
-    UPDATE_EPOCH = 400
+    UPDATE_EPOCH = 100
     model = load_model(f"./models/FiveMovements_{UPDATE_EPOCH}_steps.h5")
 
 
