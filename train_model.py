@@ -57,11 +57,8 @@ if LOAD_PREV:
 # ===== HYPERPARAMETERS ===== #
 
 model = Sequential([
-    InputLayer(input_shape=(IMG_SIZE, IMG_SIZE)),
-    Reshape((IMG_SIZE * IMG_SIZE,)),
-    Dense(64, activation='relu'),
-    Dropout(0.2),
-    BatchNormalization(),
+    InputLayer(input_shape=(21, 3)),
+    Reshape((21 * 3,)),
     Dense(32, activation='relu'),
     Dropout(0.2),
     BatchNormalization(),

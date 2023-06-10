@@ -28,9 +28,9 @@ from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormali
 # ===== HYPER PARAMETERS ===== #
 IMG_SIZE = 50
 TRAINING = False
-POSE_NUM = 3
+POSE_NUM = 4
 
-NUM_IMAGES_RECORD = 500
+NUM_IMAGES_RECORD = 100
 MODEL_ACTIVE = not TRAINING 
 
 counter = 0
@@ -50,16 +50,16 @@ for label in labels:
         os.makedirs(folder + label)
 
 model = Sequential([
-    InputLayer(input_shape=(IMG_SIZE, IMG_SIZE)),
-    Reshape((IMG_SIZE * IMG_SIZE,)),
-    Dense(256, activation='relu'),
-    Dropout(0.3),
-    BatchNormalization(),
+    InputLayer(input_shape=(21, 3)),
+    Reshape((21 * 3,)),
     Dense(32, activation='relu'),
-    Dropout(0.3),
+    Dropout(0.2),
     BatchNormalization(),
     Dense(16, activation='relu'),
-    Dropout(0.3),
+    Dropout(0.2),
+    BatchNormalization(),
+    Dense(8, activation='relu'),
+    Dropout(0.2),
     BatchNormalization(),
     Dense(len(label), activation='softmax')
 ])
@@ -73,7 +73,7 @@ if TRAINING:
     print("======================")
 elif MODEL_ACTIVE:
     UPDATE_EPOCH = 100
-    model = load_model(f"./models/FiveMovements_{UPDATE_EPOCH}_steps.h5")
+    model = load_model(f"./models/FiveMovements_100_steps.h5")
 
 
 while(True):
@@ -136,15 +136,26 @@ while(True):
 
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
-        imgWhite_in = np.expand_dims(np.array(imgWhite, dtype=np.uint8), axis=0)
+
+        lmListNormalized = []
+        # IMG_WIDTH = x, IMG_HEIGHT = y
+        
+        for coord in lmList:
+            coordNorm = [coord[0] / IMG_WIDTH, coord[1] / IMG_HEIGHT, coord[2]]
+            lmListNormalized.append(coordNorm)
+            # print(f"z is {coord[2]} in relation to x of {coordNorm[0]}")
+        
+        lmListNormalized = np.array(lmListNormalized, dtype=np.float32) # --> (21, 3) for color image
+
         string_pred = None
         if not TRAINING and MODEL_ACTIVE:
-            prediction = model(imgWhite_in)
+            prediction = model(np.expand_dims(lmListNormalized, axis=0))
             print("PREDICTON: ", labels[np.argmax(prediction)])
             string_pred = labels[np.argmax(prediction)]
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
         center = list(hand["center"])
+        # print(f"center rel: {center[0] / IMG_WIDTH}, {center[1] / IMG_HEIGHT}")
         data.extend([f"{center[0]} {center[1]}", f"{string_pred}"])
         # send with UDP all in 1 port
         sock.sendto(str.encode(str(data)), serverAddressPort)
@@ -155,9 +166,10 @@ while(True):
     # BLOCK TO SEND MODEL POINTS TO NP ARRAY
     if (key == ord("s") or key == 32) and TRAINING:
         counter += 1
-        imgWhite = np.array(imgWhite, dtype=np.uint8)
-        print(imgWhite.shape)
-        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), imgWhite)
+        
+        lmListNormalized = np.array(lmListNormalized, dtype=np.float32) 
+
+        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), lmListNormalized)
         print(f"Count:{counter}")
         if counter >= NUM_IMAGES_RECORD:
             break
