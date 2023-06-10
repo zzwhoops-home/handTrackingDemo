@@ -33,7 +33,7 @@ POSE_NUM = 4
 NUM_IMAGES_RECORD = 500
 MODEL_ACTIVE = not TRAINING 
 
-counter = 0
+COUNTER = 0
 offset = 20
 # ===== HYPER PARAMETERS ===== #
 
@@ -91,49 +91,6 @@ while(True):
         hand = hands[0]
         x, y, w, h = hand['bbox']
 
-        imgWhite = np.ones((IMG_SIZE, IMG_SIZE, 3), np.uint8) * 255
-        imgCrop = img[y - offset:y + h + offset, x - offset:x + w + offset]
-
-        imgCropShape = imgCrop.shape
-
-        aspectRatio = h / w
-
-        if aspectRatio > 1:
-            k = IMG_SIZE / h
-            wCal = math.ceil(k * w)
-            try:
-                imgResize = cv2.resize(imgCrop, (wCal, IMG_SIZE))
-            except:
-                pass
-            imgResizeShape = imgResize.shape
-            wGap = math.ceil((IMG_SIZE - wCal) / 2)
-            try:
-                imgWhite[:, wGap:wCal + wGap] = imgResize
-            except:
-                print("hand out of range!")
-                pass
-
-            
-
-        else:
-            k = IMG_SIZE / w
-            hCal = math.ceil(k * h)
-            try:
-                imgResize = cv2.resize(imgCrop, (IMG_SIZE, hCal))
-            except:
-                pass
-            imgResizeShape = imgResize.shape
-            hGap = math.ceil((IMG_SIZE - hCal) / 2)
-            try:
-                imgWhite[hGap:hCal + hGap, :] = imgResize
-            except:
-                print("hand out of range!")
-                pass
-
-        # cv2.imshow("ImageCrop", imgCrop)
-        imgWhite = cv2.cvtColor(imgWhite, cv2.COLOR_BGR2GRAY)
-        cv2.imshow("ImageWhite", imgWhite)
-
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
 
@@ -155,8 +112,10 @@ while(True):
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
         center = list(hand["center"])
-        # print(f"center rel: {center[0] / IMG_WIDTH}, {center[1] / IMG_HEIGHT}")
+
+        # preparing data
         data.extend([f"{center[0]} {center[1]}", f"{string_pred}"])
+
         # send with UDP all in 1 port
         sock.sendto(str.encode(str(data)), serverAddressPort)
     
@@ -165,13 +124,13 @@ while(True):
     
     # BLOCK TO SEND MODEL POINTS TO NP ARRAY
     if (key == ord("s") or key == 32) and TRAINING:
-        counter += 1
+        COUNTER += 1
         
         lmListNormalized = np.array(lmListNormalized, dtype=np.float32) 
 
-        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), lmListNormalized)
-        print(f"Count:{counter}")
-        if counter >= NUM_IMAGES_RECORD:
+        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{COUNTER}"), lmListNormalized)
+        print(f"Count:{COUNTER}")
+        if COUNTER >= NUM_IMAGES_RECORD:
             break
     if key & 0xFF == ord('q'):
         break

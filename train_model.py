@@ -47,7 +47,7 @@ from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormali
 # ===== HYPERPARAMETERS ===== #
 
 IMG_SIZE = 50
-PREV_EPOCHS = 0
+PREV_EPOCHS = 1000
 LOAD_PREV = True if PREV_EPOCHS > 0 else False
 
 EPOCHS = 1000
