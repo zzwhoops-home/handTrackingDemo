@@ -18,6 +18,13 @@ public class PlayerController : MonoBehaviour
 
     public GameObject firePoint;
     public GameObject fireball;
+    public GameObject electricArc;
+    public float fireballEnergy = 10.0f;
+    public float electricArcEnergy = 20.0f;
+    public float fireballCooldown = 0.5f;
+    public float electricArcCooldown = 2.0f;
+    private float fireballCurrentCooldown;
+    private float electricArcCurrentCooldown;
     public GameObject crosshair;
     public HandTracking handTracking;
     public ShootFromHand shootFromHand;
@@ -30,12 +37,13 @@ public class PlayerController : MonoBehaviour
     private float healingCooldown;
     public float maxEnergy = 200.0f;
     private float energy;
-    public float timeBetweenEnergy = 0.5f;
-    public float energyCooldownAfterSpell = 3.0f;
-    public float energyGainAmount = 1.0f;
+    public float timeBetweenEnergy = 0.1f;
+    public float timeBeforeGainEnergy = 1.0f;
+    public float energyGainAmount = 2.5f;
     private float energyCooldown;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI energyText;
+    public TextMeshProUGUI debugText;
 
     // Start is called before the first frame update
     void Start()
@@ -46,10 +54,20 @@ public class PlayerController : MonoBehaviour
 
         // regenerate health if not recently damaged
         StartCoroutine(HealPlayer());
+        StartCoroutine(RegenEnergy());
+
+        // set cooldowns to 0
+        fireballCurrentCooldown = 0.0f;
+        electricArcCurrentCooldown = 0.0f;
+
+        // manage cooldowns in coroutine
+        StartCoroutine(FireballCooldown());
+        StartCoroutine(ElectricArcCooldown());
 
         // get width and height of player's screen
         screenWidth = Screen.width;
         screenHeight = Screen.height;
+
     }
 
     // Update is called once per frame
@@ -62,6 +80,8 @@ public class PlayerController : MonoBehaviour
 
         String prediction = handTracking.GetPosePrediction();
         ActionManager(prediction);
+
+        debugText.text = string.Format("{0}\n{1}\n{2}", fireballCurrentCooldown, energyCooldown, prediction);
     }
 
     private void UpdateCrosshair()
@@ -76,33 +96,57 @@ public class PlayerController : MonoBehaviour
 
         float crosshairX = xPercent * screenWidth;
         float crosshairY = screenHeight - (yPercent * screenHeight);
-        print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
+        // print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
 
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
     } 
 
     public void ActionManager(String prediction) {
         if (prediction == "neutral") {
-            
+            Recharge();
         } else {
-            energyCooldown = energyCooldownAfterSpell;
             if (prediction == "at_screen") {
-                Fireball();
+                if (energy > fireballEnergy && fireballCurrentCooldown <= 0f) {
+                    Fireball();
+                    energyCooldown = timeBeforeGainEnergy;
+                    fireballCurrentCooldown = fireballCooldown;
+                } else {
+                    Recharge();
+                }
             } else if (prediction == "peace") {
-                ElectricArc();
+                if (energy > electricArcEnergy && electricArcCurrentCooldown <= 0f) {
+                    ElectricArc();
+                    energyCooldown = timeBeforeGainEnergy;
+                    electricArcCurrentCooldown = electricArcCooldown;
+                } else {
+                    Recharge();
+                }
             }
         }
     }
+
+    private void Recharge()
+    {
+        // need to add effects
+        print("recharging");
+    }
+
     public void Fireball()
     {
         GameObject spell;
 
         spell = Instantiate(fireball, firePoint.transform.position, Quaternion.identity);
         spell.transform.localRotation = shootFromHand.GetRotation();
+        DrainEnergy(fireballEnergy);
     }
 
     public void ElectricArc()
     {
+        GameObject spell;
+
+        spell = Instantiate(electricArc, firePoint.transform.position, Quaternion.identity);
+        spell.transform.localRotation = shootFromHand.GetRotation();
+        DrainEnergy(electricArcEnergy);
     }
     public void Damage(float amount) {
         health -= amount;
@@ -139,6 +183,36 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenEnergy);
             } else {
                 energyCooldown -= 0.1f;
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+    }
+    private IEnumerator FireballCooldown()
+    {
+        while (true) {
+            if (fireballCurrentCooldown > 0) {
+                yield return new WaitForSeconds(0.1f);
+                if (fireballCurrentCooldown - 0.1f < 0) {
+                    fireballCurrentCooldown = 0f;
+                } else {
+                    fireballCurrentCooldown -= 0.1f;
+                }
+            } else {
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+    }
+    private IEnumerator ElectricArcCooldown()
+    {
+        while (true) {
+            if (electricArcCurrentCooldown > 0) {
+                yield return new WaitForSeconds(0.1f);
+                if (electricArcCurrentCooldown - 0.1f < 0) {
+                    electricArcCurrentCooldown = 0f;
+                } else {
+                    electricArcCurrentCooldown -= 0.1f;
+                }
+            } else {
                 yield return new WaitForSeconds(0.1f);
             }
         }

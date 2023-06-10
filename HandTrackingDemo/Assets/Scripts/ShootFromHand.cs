@@ -5,7 +5,7 @@ using UnityEngine;
 public class ShootFromHand : MonoBehaviour
 {
     public Camera cam;
-    private Ray handRay;
+    public Ray handRay;
     private Vector3 direction;
     private Quaternion rotation;
     public Transform crosshair;

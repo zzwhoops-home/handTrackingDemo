@@ -31,6 +31,7 @@ public class HandTracking : MonoBehaviour
             int len = points.Length;
             string[] centerStrings = points[len - 2].Trim(' ', '\'').Split(" ");
             prediction = points[len - 1];
+            prediction = prediction.Trim(' ', '\'');
 
             // IMPORTANT: CENTER INFORMATION IS SENT SECOND TO LAST ITEM IN ARRAY, LAST ITEM ARRAY IS STRING PREDICTION
             centerFloats = new float[] {float.Parse(centerStrings[0]), float.Parse(centerStrings[1])};
@@ -54,6 +55,9 @@ public class HandTracking : MonoBehaviour
         return centerFloats;
     }
     public String GetPosePrediction() {
+        if (string.IsNullOrEmpty(prediction)) {
+            return "";
+        }
         return prediction;
     }
 }
