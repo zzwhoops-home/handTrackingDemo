@@ -61,9 +61,9 @@ model = Sequential([
 model.compile(optimizer="Adam", loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 model.summary()
 
-LOAD_PREV = True
-EPOCHS = 100
-PREV_EPOCHS = 50
+LOAD_PREV = False
+EPOCHS = 50
+PREV_EPOCHS = 0
 if LOAD_PREV:
     model = load_model(f"models\FiveMovements_{PREV_EPOCHS}_steps.h5")
 model.fit(X_train, Y_train, epochs=EPOCHS, verbose=True)

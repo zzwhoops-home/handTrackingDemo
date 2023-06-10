@@ -67,7 +67,7 @@ if TRAINING:
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
 elif MODEL_ACTIVE:
-    model = load_model("./models/FiveMovements1_150_steps.h5")
+    model = load_model("./models/FiveMovements_50_steps.h5")
 
 
 while(True):
