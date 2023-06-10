@@ -23,43 +23,52 @@ if not cap.isOpened():
 detector = HandDetector(maxHands=1, detectionCon=0.8)
 
 from keras.models import Sequential
-from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape
+from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormalization
 
 offset = 20
-imgSize = 300
+imgSize = 200
 
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
 
-labels = ['at_screen', 'neutral', 'ok', 'pointer_left', 'pointer_right']
+folder = f"./train_data_points/"
+counter = 0
+labels = ['at_screen', 'neutral', 'peace', 'pointer_left', 'pointer_right']
+for label in labels:
+    if not os.path.exists(folder + label):
+        os.makedirs(folder + label)
 
 model = Sequential([
-    InputLayer(input_shape=(21, 3)),
-    Dense(64, activation='relu'),
+    InputLayer(input_shape=(200, 200)),
+    Reshape((200 * 200,)),
+    Dense(256, activation='relu'),
+    Dropout(0.3),
+    BatchNormalization(),
     Dense(32, activation='relu'),
-    Dense(5, activation='relu'),
-    Reshape((105,)),
-    Dense(64, activation='relu'),
-    Dense(32, activation='relu'),
+    Dropout(0.3),
+    BatchNormalization(),
     Dense(16, activation='relu'),
-    Dense(len(labels), activation='softmax')
+    Dropout(0.3),
+    BatchNormalization(),
+    Dense(len(label), activation='softmax')
 ])
 
 print(model.summary())
-pose_num = 1
-TO_TRAIN = labels[pose_num]
-NUM_IMAGES_RECORD = 200
+
 TRAINING = False
+POSE_NUM = 2
+TO_TRAIN = labels[POSE_NUM]
+NUM_IMAGES_RECORD = 200
+MODEL_ACTIVE = not TRAINING 
 
 if TRAINING:
     print("======================")
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
-else:
-    model = load_model("./models/FiveMovements_20000_steps.h5")
-folder = f"./train_data_points/"
-counter = 0
+elif MODEL_ACTIVE:
+    model = load_model("./models/FiveMovements_50_steps.h5")
+
 
 while(True):
     success, img = cap.read()
@@ -116,16 +125,16 @@ while(True):
                 pass
 
         # cv2.imshow("ImageCrop", imgCrop)
-        # cv2.imshow("ImageWhite", imgWhite)
-
+        imgWhite = cv2.cvtColor(imgWhite, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("ImageWhite", imgWhite)
 
         # get list of landmarks, add to data object
         lmList = hand["lmList"]
-        lmList_in = np.expand_dims(np.array(lmList, dtype=np.uint8), axis=0)
+        imgWhite_in = np.expand_dims(np.array(imgWhite, dtype=np.uint8), axis=0)
         string_pred = None
-        if not TRAINING:
-            prediction = model(lmList_in)
-            print("PREDICITON: ", labels[np.argmax(prediction)])
+        if not TRAINING and MODEL_ACTIVE:
+            prediction = model(imgWhite_in)
+            print("PREDICTON: ", labels[np.argmax(prediction)])
             string_pred = labels[np.argmax(prediction)]
         for lm in lmList:
             data.extend([lm[0], IMG_HEIGHT - lm[1], lm[2]])
@@ -136,10 +145,13 @@ while(True):
     
     cv2.imshow('Image', img)
     key = cv2.waitKey(1)
+    
+    # BLOCK TO SEND MODEL POINTS TO NP ARRAY
     if (key == ord("s") or key == 32) and TRAINING:
         counter += 1
-        lmList = np.array(lmList, dtype=np.uint8)
-        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}2_{counter}"), lmList)
+        imgWhite = np.array(imgWhite, dtype=np.uint8)
+        print(imgWhite.shape)
+        np.save(os.path.join(folder, TO_TRAIN, f"{TO_TRAIN}_{counter}"), imgWhite)
         print(f"Count:{counter}")
         if counter >= NUM_IMAGES_RECORD:
             break
