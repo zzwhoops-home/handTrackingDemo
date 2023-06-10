@@ -28,9 +28,9 @@ from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormali
 # ===== HYPER PARAMETERS ===== #
 IMG_SIZE = 50
 TRAINING = False
-POSE_NUM = 4
+POSE_NUM = 4 
 
-NUM_IMAGES_RECORD = 100
+NUM_IMAGES_RECORD = 500
 MODEL_ACTIVE = not TRAINING 
 
 counter = 0
@@ -72,8 +72,8 @@ if TRAINING:
     print(f"RECORDING: {TO_TRAIN}")
     print("======================")
 elif MODEL_ACTIVE:
-    UPDATE_EPOCH = 100
-    model = load_model(f"./models/FiveMovements_100_steps.h5")
+    UPDATE_EPOCH = 1000
+    model = load_model(f"./models/FiveMovements_{UPDATE_EPOCH}_steps.h5")
 
 
 while(True):

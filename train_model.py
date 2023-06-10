@@ -50,7 +50,7 @@ IMG_SIZE = 50
 PREV_EPOCHS = 0
 LOAD_PREV = True if PREV_EPOCHS > 0 else False
 
-EPOCHS = 100
+EPOCHS = 1000
 if LOAD_PREV:
     model = load_model(f"models\FiveMovements_{PREV_EPOCHS}_steps.h5")
 
