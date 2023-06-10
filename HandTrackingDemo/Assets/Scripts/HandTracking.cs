@@ -12,6 +12,7 @@ public class HandTracking : MonoBehaviour
     public GameObject center;
     public float scaleFactor = 200f;
     private float[] centerFloats;
+    private String prediction;
     void Start(){
         centerFloats = new float[] {Screen.width / 2, Screen.height / 2};
     }
@@ -29,7 +30,7 @@ public class HandTracking : MonoBehaviour
             
             int len = points.Length;
             string[] centerStrings = points[len - 2].Trim(' ', '\'').Split(" ");
-            string prediction = points[len - 1];
+            prediction = points[len - 1];
 
             // IMPORTANT: CENTER INFORMATION IS SENT SECOND TO LAST ITEM IN ARRAY, LAST ITEM ARRAY IS STRING PREDICTION
             centerFloats = new float[] {float.Parse(centerStrings[0]), float.Parse(centerStrings[1])};
@@ -51,5 +52,8 @@ public class HandTracking : MonoBehaviour
     }
     public float[] GetCenterPoints() {
         return centerFloats;
+    }
+    public String GetPosePrediction() {
+        return prediction;
     }
 }

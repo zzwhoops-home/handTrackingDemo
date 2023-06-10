@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using IGameControlsActions;
 using UnityEngine;
 using TMPro;
-using UnityEngine.InputSystem;
 using System;
 
-public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls.IShootActions
+public class PlayerController : MonoBehaviour
 {
     public Camera cam;
     private int camWidth = 1280;
@@ -14,7 +12,6 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     private int screenWidth;
     private int screenHeight;
 
-    GameControls controls;
     public GameObject firePoint;
     public GameObject fireball;
     public GameObject crosshair;
@@ -25,10 +22,14 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
     private float health;
     public float timeBetweenHealing = 0.5f;
     public float timeHealAfterDamage = 3.0f;
-    private float healingCooldown;
     public float healAmount = 1.0f;
+    private float healingCooldown;
     public float maxEnergy = 200.0f;
     private float energy;
+    public float timeBetweenEnergy = 0.5f;
+    public float energyCooldownAfterSpell = 3.0f;
+    public float energyGainAmount = 1.0f;
+    private float energyCooldown;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI energyText;
 
@@ -54,6 +55,9 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
         energyText.text = string.Format("Energy: {0}", energy);
 
         UpdateCrosshair();
+
+        String prediction = handTracking.GetPosePrediction();
+        ActionManager(prediction);
     }
 
     private void UpdateCrosshair()
@@ -71,44 +75,29 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
         print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
 
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
-    }
+    } 
 
-    public void OnEnable()
-    {
-        if (controls == null)
-        {
-            controls = new GameControls();
-            // Tell the "gameplay" action map that we want to get told about
-            // when actions get triggered.
-            controls.Shoot.SetCallbacks(this);
+    public void ActionManager(String prediction) {
+        if (prediction == "neutral") {
+            
+        } else {
+            energyCooldown = energyCooldownAfterSpell;
+            if (prediction == "at_screen") {
+                Fireball();
+            } else if (prediction == "peace") {
+                ElectricArc();
+            }
         }
-        controls.Shoot.Enable();
     }
-
-    public void OnDisable()
-    {
-        controls.Shoot.Disable();
-    }    
-
-    public void OnFireball(InputAction.CallbackContext context)
+    public void Fireball()
     {
         GameObject spell;
 
-        if (context.started) {
-            spell = Instantiate(fireball, firePoint.transform.position, Quaternion.identity);
-            spell.transform.localRotation = shootFromHand.GetRotation();
-        }
+        spell = Instantiate(fireball, firePoint.transform.position, Quaternion.identity);
+        spell.transform.localRotation = shootFromHand.GetRotation();
     }
 
-    public void OnLightningBolt(InputAction.CallbackContext context)
-    {
-    }
-
-    public void OnLightRay(InputAction.CallbackContext context)
-    {
-    }
-
-    public void OnIcicle(InputAction.CallbackContext context)
+    public void ElectricArc()
     {
     }
     public void Damage(float amount) {
@@ -131,20 +120,23 @@ public class PlayerController : MonoBehaviour, IGameControlsActions.GameControls
             }
         }
     }
-    // private IEnumerator RegenEnergy()
-    // {
-    //     while (true) {
-    //         if (!recentlyDamaged) {
-    //             if (health + healAmount < maxHealth) {
-    //                 health += healAmount;
-    //             } else {
-    //                 health = maxHealth;
-    //             }
-    //             yield return new WaitForSeconds(timeBetweenHealing);
-    //         } else {
-    //             yield return new WaitForSeconds(timeHealAfterDamage);
-    //             recentlyDamaged = false;
-    //         }
-    //     }
-    // }
+    public void DrainEnergy(float amount) {
+        energy -= amount;
+    }
+    private IEnumerator RegenEnergy()
+    {
+        while (true) {
+            if (energyCooldown == 0 || energyCooldown - Time.deltaTime <= 0) {
+                if (energy + energyGainAmount < maxEnergy) {
+                    energy += energyGainAmount;
+                } else {
+                    energy = maxEnergy;
+                }
+                yield return new WaitForSeconds(timeBetweenEnergy);
+            } else {
+                energyCooldown -= 0.1f;
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+    }
 }
