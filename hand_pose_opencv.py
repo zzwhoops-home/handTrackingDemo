@@ -25,23 +25,30 @@ detector = HandDetector(maxHands=1, detectionCon=0.8)
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, InputLayer, Dropout, Reshape, BatchNormalization
 
+# ===== HYPER PARAMETERS ===== #
+counter = 0
 offset = 20
-IMG_SIZE = 200
+IMG_SIZE = 50
+TRAINING = TRUE
+POSE_NUM = 2
+TO_TRAIN = labels[POSE_NUM]
+NUM_IMAGES_RECORD = 200
+MODEL_ACTIVE = not TRAINING 
+# ===== HYPER PARAMETERS ===== #
 
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverAddressPort = ("127.0.0.1", 5052)
 
 folder = f"./train_data_points/"
-counter = 0
 labels = ['at_screen', 'neutral', 'peace', 'pointer_left', 'pointer_right']
 for label in labels:
     if not os.path.exists(folder + label):
         os.makedirs(folder + label)
 
 model = Sequential([
-    InputLayer(input_shape=(200, 200)),
-    Reshape((200 * 200,)),
+    InputLayer(input_shape=(IMG_SIZE, IMG_SIZE)),
+    Reshape((IMG_SIZE * IMG_SIZE,)),
     Dense(256, activation='relu'),
     Dropout(0.3),
     BatchNormalization(),
@@ -56,11 +63,6 @@ model = Sequential([
 
 print(model.summary())
 
-TRAINING = False
-POSE_NUM = 2
-TO_TRAIN = labels[POSE_NUM]
-NUM_IMAGES_RECORD = 200
-MODEL_ACTIVE = not TRAINING 
 
 if TRAINING:
     print("======================")
