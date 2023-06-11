@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public float electricArcCooldown = 2.0f;
     private float fireballCurrentCooldown;
     private float electricArcCurrentCooldown;
+    public float rotateCooldown = 0.75f;
+    private float rotateCurrentCooldown;
     public GameObject crosshair;
     public HandTracking handTracking;
     public ShootFromHand shootFromHand;
@@ -46,6 +48,16 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI energyText;
     public Slider healthBar;
     public Slider energyBar;
+    public Image fireballCooldownImage;
+    public Image electricArcCooldownImage;
+    public Image rotateCooldownImage_1;
+    public Image rotateCooldownImage_2;
+    private RectTransform fBallRT;
+    private RectTransform eArcRT;
+    private float fBallImageHeight;
+    private float eArcImageHeight;
+    private RectTransform rotateRT;
+    private float rotateImageHeight;
     public TextMeshProUGUI debugText;
 
     // Start is called before the first frame update
@@ -66,21 +78,42 @@ public class PlayerController : MonoBehaviour
         // manage cooldowns in coroutine
         StartCoroutine(FireballCooldown());
         StartCoroutine(ElectricArcCooldown());
+        StartCoroutine(RotateCooldown());
 
         // get width and height of player's screen
         screenWidth = Screen.width;
         screenHeight = Screen.height;
 
+        // recttransforms for spell cooldown displays
+        fBallRT = fireballCooldownImage.rectTransform;
+        eArcRT = electricArcCooldownImage.rectTransform;
+        rotateRT = rotateCooldownImage_1.rectTransform;
+
+        // heights of cooldown display images
+        fBallImageHeight = fBallRT.rect.height;
+        eArcImageHeight = eArcRT.rect.height;
+        rotateImageHeight = rotateRT.rect.height;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // update UI information for player
         healthText.text = string.Format("{0}/{1}", health, maxHealth);
         energyText.text = string.Format("{0}/{1}", energy, maxEnergy);
 
         healthBar.value = health / maxHealth;
         energyBar.value = energy / maxEnergy;
+
+        float fBallHeight = (fireballCurrentCooldown / fireballCooldown) * fBallImageHeight;
+        float eArcHeight = (electricArcCurrentCooldown / electricArcCooldown) * eArcImageHeight;
+        float rotateHeight = (rotateCurrentCooldown / rotateCooldown) * rotateImageHeight;
+        
+        // lazy code lol
+        fireballCooldownImage.rectTransform.sizeDelta = new Vector2(fBallImageHeight, fBallHeight);
+        electricArcCooldownImage.rectTransform.sizeDelta = new Vector2(eArcImageHeight, eArcHeight);
+        rotateCooldownImage_1.rectTransform.sizeDelta = new Vector2(rotateImageHeight, rotateHeight);
+        rotateCooldownImage_2.rectTransform.sizeDelta = new Vector2(rotateImageHeight, rotateHeight);
 
         UpdateCrosshair();
 
@@ -110,7 +143,26 @@ public class PlayerController : MonoBehaviour
     public void ActionManager(String prediction) {
         if (prediction == "neutral") {
             Recharge();
-        } else {
+        } else if (prediction == "pointer_left") {
+            if (rotateCurrentCooldown <= 0f) {
+                // rotate 90 deg left
+                cam.transform.Rotate(Vector3.up, -90f, Space.World);
+                rotateCurrentCooldown = rotateCooldown;
+
+                // set back to neutral so things don't go haywire
+                prediction = "neutral";
+            }
+        } else if (prediction == "pointer_right") {
+            if (rotateCurrentCooldown <= 0f) {
+                // rotate 90 deg right
+                cam.transform.Rotate(Vector3.up, 90f, Space.World);
+                rotateCurrentCooldown = rotateCooldown;
+
+                // set back to neutral so things don't go haywire
+                prediction = "neutral";
+            }
+        }
+        else {
             if (prediction == "at_screen") {
                 if (energy > fireballEnergy && fireballCurrentCooldown <= 0f) {
                     Fireball();
@@ -126,6 +178,19 @@ public class PlayerController : MonoBehaviour
                     electricArcCurrentCooldown = electricArcCooldown;
                 } else {
                     Recharge();
+                }
+            }
+        }
+    }
+    private IEnumerator RotateCooldown() {
+        while (true) {
+            yield return new WaitUntil(() => rotateCurrentCooldown > 0f);
+            while (true) {
+                yield return new WaitForSeconds(0.1f);
+                if (rotateCurrentCooldown - 0.1f == 0) {
+                    rotateCurrentCooldown = 0f;
+                } else {
+                    rotateCurrentCooldown -= 0.1f;
                 }
             }
         }
@@ -169,8 +234,8 @@ public class PlayerController : MonoBehaviour
                 }
                 yield return new WaitForSeconds(timeBetweenHealing);
             } else {
-                healingCooldown -= 0.1f;
                 yield return new WaitForSeconds(0.1f);
+                healingCooldown -= 0.1f;
             }
         }
     }
@@ -188,8 +253,8 @@ public class PlayerController : MonoBehaviour
                 }
                 yield return new WaitForSeconds(timeBetweenEnergy);
             } else {
-                energyCooldown -= 0.1f;
                 yield return new WaitForSeconds(0.1f);
+                energyCooldown -= 0.1f;
             }
         }
     }
@@ -197,14 +262,14 @@ public class PlayerController : MonoBehaviour
     {
         while (true) {
             if (fireballCurrentCooldown > 0) {
-                yield return new WaitForSeconds(0.1f);
-                if (fireballCurrentCooldown - 0.1f < 0) {
+                yield return new WaitForSeconds(0.05f);
+                if (fireballCurrentCooldown - 0.05f < 0) {
                     fireballCurrentCooldown = 0f;
                 } else {
-                    fireballCurrentCooldown -= 0.1f;
+                    fireballCurrentCooldown -= 0.05f;
                 }
             } else {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
             }
         }
     }
@@ -212,14 +277,14 @@ public class PlayerController : MonoBehaviour
     {
         while (true) {
             if (electricArcCurrentCooldown > 0) {
-                yield return new WaitForSeconds(0.1f);
-                if (electricArcCurrentCooldown - 0.1f < 0) {
+                yield return new WaitForSeconds(0.05f);
+                if (electricArcCurrentCooldown - 0.05f < 0) {
                     electricArcCurrentCooldown = 0f;
                 } else {
-                    electricArcCurrentCooldown -= 0.1f;
+                    electricArcCurrentCooldown -= 0.05f;
                 }
             } else {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.05f);
             }
         }
     }
