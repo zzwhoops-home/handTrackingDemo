@@ -27,7 +27,7 @@ public class SpawnMonsters : MonoBehaviour
     {
         for (int i = 0; i < numRounds; i++) {
             round++;
-            for (int m = 0 ; m < round * 5; m++) {
+            for (int m = 0 ; m < round * 3; m++) {
                 // spawn from random spawnpoint in world
                 int spawn = Random.Range(0, 4);
                 Transform spawnPoint = spawnPoints[spawn].transform;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System;
 
@@ -39,10 +40,12 @@ public class PlayerController : MonoBehaviour
     private float energy;
     public float timeBetweenEnergy = 0.1f;
     public float timeBeforeGainEnergy = 1.0f;
-    public float energyGainAmount = 2.5f;
+    public float energyGainAmount = 3f;
     private float energyCooldown;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI energyText;
+    public Slider healthBar;
+    public Slider energyBar;
     public TextMeshProUGUI debugText;
 
     // Start is called before the first frame update
@@ -73,8 +76,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        healthText.text = string.Format("Health: {0}", health);
-        energyText.text = string.Format("Energy: {0}", energy);
+        healthText.text = string.Format("{0}/{1}", health, maxHealth);
+        energyText.text = string.Format("{0}/{1}", energy, maxEnergy);
+
+        healthBar.value = health / maxHealth;
+        energyBar.value = energy / maxEnergy;
 
         UpdateCrosshair();
 
