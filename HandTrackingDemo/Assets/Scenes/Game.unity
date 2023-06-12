@@ -9184,7 +9184,7 @@ MonoBehaviour:
   - {fileID: 1283691410}
   center: {fileID: 0}
   scaleFactor: 200
-  thresholdSlider: 0.9
+  thresholdRange: 0.9
 --- !u!1 &771765810
 GameObject:
   m_ObjectHideFlags: 0
