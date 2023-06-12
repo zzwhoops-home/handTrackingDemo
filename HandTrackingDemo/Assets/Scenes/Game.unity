@@ -5834,7 +5834,7 @@ MonoBehaviour:
   maxEnergy: 250
   timeBetweenEnergy: 0.1
   timeBeforeGainEnergy: 1
-  energyGainAmount: 3
+  energyGainAmount: 2
   healthText: {fileID: 1806172172}
   energyText: {fileID: 638099276}
   healthBar: {fileID: 839466348}
@@ -9184,6 +9184,7 @@ MonoBehaviour:
   - {fileID: 1283691410}
   center: {fileID: 0}
   scaleFactor: 200
+  thresholdSlider: 0.9
 --- !u!1 &771765810
 GameObject:
   m_ObjectHideFlags: 0

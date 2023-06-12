@@ -7,8 +7,8 @@ using TMPro;
 public class Damageable : MonoBehaviour
 {
     public GameObject dmgIndicator;
-    private float dmgIndicatorOffset_X = 0.3f;
-    private float dmgIndicatorOffset_Y = 0.2f;
+    private float dmgIndicatorOffset_X = 1f;
+    private float dmgIndicatorOffset_Y = 0.3f;
     private Collider objCollider;
     public float maxHealth = 20.0f;
     public float force = 3.0f;
@@ -41,7 +41,7 @@ public class Damageable : MonoBehaviour
     public Vector3 RandomCoords() {
         
         float x = Random.Range(-dmgIndicatorOffset_X, dmgIndicatorOffset_X);
-        float y = Random.Range(-dmgIndicatorOffset_Y, dmgIndicatorOffset_Y) + (objCollider.bounds.size.y);
+        float y = Random.Range(0f, dmgIndicatorOffset_Y) + (objCollider.bounds.size.y);
         float z = Random.Range(-dmgIndicatorOffset_X, dmgIndicatorOffset_X);
         Vector3 offset = new Vector3(x, y, z);
 

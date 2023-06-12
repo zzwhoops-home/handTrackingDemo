@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     private float energy;
     public float timeBetweenEnergy = 0.1f;
     public float timeBeforeGainEnergy = 1.0f;
-    public float energyGainAmount = 3f;
+    public float energyGainAmount = 2f;
     private float energyCooldown;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI energyText;
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
 
         float crosshairX = xPercent * screenWidth;
         float crosshairY = screenHeight - (yPercent * screenHeight);
-        // print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
+        print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
 
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
     } 
