@@ -5823,7 +5823,7 @@ MonoBehaviour:
   electricArcEnergy: 20
   fireballCooldown: 0.5
   electricArcCooldown: 2
-  rotateCooldown: 0.75
+  rotateCooldown: 0.9
   crosshair: {fileID: 298960842}
   handTracking: {fileID: 731190516}
   shootFromHand: {fileID: 243177274}

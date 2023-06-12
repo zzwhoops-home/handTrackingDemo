@@ -80,10 +80,6 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(ElectricArcCooldown());
         StartCoroutine(RotateCooldown());
 
-        // get width and height of player's screen
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
-
         // recttransforms for spell cooldown displays
         fBallRT = fireballCooldownImage.rectTransform;
         eArcRT = electricArcCooldownImage.rectTransform;
@@ -93,6 +89,9 @@ public class PlayerController : MonoBehaviour
         fBallImageHeight = fBallRT.rect.height;
         eArcImageHeight = eArcRT.rect.height;
         rotateImageHeight = rotateRT.rect.height;
+
+        // start coroutine to get screen dimensions after first frame renders
+        StartCoroutine(GetScreenDimensions());
     }
 
     // Update is called once per frame
@@ -121,6 +120,14 @@ public class PlayerController : MonoBehaviour
         ActionManager(prediction);
 
         debugText.text = string.Format("{0}\n{1}\n{2}", fireballCurrentCooldown, energyCooldown, prediction);
+    }
+
+    private IEnumerator GetScreenDimensions()
+    {
+        yield return null;
+
+        screenWidth = Screen.width;
+        screenHeight = Screen.height;
     }
 
     private void UpdateCrosshair()
