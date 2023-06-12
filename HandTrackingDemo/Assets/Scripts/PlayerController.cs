@@ -92,7 +92,6 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(HealPlayer());
         StartCoroutine(RegenEnergy());
 
-
         // recttransforms for spell cooldown displays
         fBallRT = fireballCooldownImage.rectTransform;
         eArcRT = electricArcCooldownImage.rectTransform;
@@ -158,7 +157,7 @@ public class PlayerController : MonoBehaviour
 
         float crosshairX = xPercent * screenWidth;
         float crosshairY = screenHeight - (yPercent * screenHeight);
-        print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
+        // print(String.Format("{0} {1} {2} {3} {4} {5}", x, y, xPercent, yPercent, crosshairX, crosshairY));
 
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
     } 

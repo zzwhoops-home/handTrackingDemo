@@ -7,6 +7,7 @@ import math
 import time
 import os
 from keras.models import load_model
+import socket
 
 cap = cv2.VideoCapture(0) # uncomment if you have webcam
 if not cap.isOpened():
@@ -38,7 +39,15 @@ offset = 20
 
 # Comms
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-serverAddressPort = ("127.0.0.1", 5052)
+
+def get_local_ip():
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    return ip_address
+
+ip_address = get_local_ip()
+
+serverAddressPort = (f"{ip_address}", 5052)
 
 folder = f"./train_data_points/"
 labels = ['at_screen', 'neutral', 'peace', 'pointer_left', 'pointer_right']
@@ -118,7 +127,7 @@ while(True):
         # send with UDP all in 1 port
         sock.sendto(str.encode(str(data)), serverAddressPort)
     
-    # cv2.imshow('Image', img)
+    cv2.imshow('Image', img)
     key = cv2.waitKey(1)
     
     # BLOCK TO SEND MODEL POINTS TO NP ARRAY

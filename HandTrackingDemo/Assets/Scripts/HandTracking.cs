@@ -10,13 +10,13 @@ public class HandTracking : MonoBehaviour
     // Start is called before the first frame update
     public UDPReceive udpRecieve;
     public GameObject[] handPoints;
-    public GameObject center;
     public float scaleFactor = 200f;
     private float[] centerFloats;
-    private String prediction;
+    private string prediction;
+    private string previousData = "";
 
     private Queue<String> recentPredictions;
-    private int maxRecent = 10;
+    private int maxRecent = 20;
     // higher threshold = LESS sensitive predictions. MUST BE LESS THAN OR EQUAL TO maxRecent! This is in a percentage. It is automatically clamped.
     
     [Range(0.5f, 1.0f)]
@@ -27,7 +27,9 @@ public class HandTracking : MonoBehaviour
         centerFloats = new float[] {Screen.width / 2, Screen.height / 2};
         recentPredictions = new Queue<String>();
 
-        threshold = (int) Mathf.Round(Mathf.Clamp(thresholdRange, 0, maxRecent));
+        threshold = (int) Mathf.Round(maxRecent * thresholdRange);
+        print(threshold);
+        StartCoroutine(Prediction());
     }
 
     // Update is called once per frame
@@ -35,7 +37,7 @@ public class HandTracking : MonoBehaviour
         // constantly update received data from local server
         string data = udpRecieve.data;
 
-        if(!string.IsNullOrEmpty(data) || data.Length != 0){
+        if((!string.IsNullOrEmpty(data) || data.Length != 0) && previousData != data){
             // remove first and last character, which are "[" and "]" respectively
             data = data.Trim('[', ']');
 
@@ -64,6 +66,7 @@ public class HandTracking : MonoBehaviour
                 handPoints[i].transform.localPosition = new Vector3(x, y, z);
                 // print(handPoints[0].transform.localPosition.z);
             }
+            previousData = data;
         }
     }
 
@@ -75,6 +78,9 @@ public class HandTracking : MonoBehaviour
                 recentPredictions.Dequeue();
             }
         }
+    }
+    private IEnumerator Prediction() {
+        yield return null;
     }
 
     public float[] GetCenterPoints() {
@@ -105,6 +111,9 @@ public class HandTracking : MonoBehaviour
                 maxCount = pair.Value;
             }
         }
+        // print(String.Format("{0} {1}", maxCount, posePrediction));
+        string queueContents = string.Join(", ", recentPredictions.ToArray());
+        print(queueContents);
         if (maxCount > threshold) {
             return posePrediction;
         } else {
