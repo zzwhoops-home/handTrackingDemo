@@ -1,5 +1,4 @@
 import cv2
-import mediapipe as mp
 from cvzone.HandTrackingModule import HandDetector
 import socket
 import json
@@ -119,7 +118,7 @@ while(True):
         # send with UDP all in 1 port
         sock.sendto(str.encode(str(data)), serverAddressPort)
     
-    cv2.imshow('Image', img)
+    # cv2.imshow('Image', img)
     key = cv2.waitKey(1)
     
     # BLOCK TO SEND MODEL POINTS TO NP ARRAY
