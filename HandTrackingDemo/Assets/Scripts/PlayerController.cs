@@ -60,16 +60,21 @@ public class PlayerController : MonoBehaviour
     private float rotateImageHeight;
     public TextMeshProUGUI debugText;
 
+    public TextMeshProUGUI gameOverScoreText;
+    public GameObject gameOverPanel;
+    private int scoreTarget;
+    private int scoreDisplay;
+    public TextMeshProUGUI scoreText;
+    public int growthAmount = 1;
+
     // Start is called before the first frame update
     void Start()
     {
-        // at the start, player starts at max HP
+        // at the start, player starts at max HP, 0 score, and game over is not enabled
+        gameOverPanel.SetActive(false);
+        scoreTarget = 0;
         health = maxHealth;
         energy = maxEnergy;
-
-        // regenerate health if not recently damaged
-        StartCoroutine(HealPlayer());
-        StartCoroutine(RegenEnergy());
 
         // set cooldowns to 0
         fireballCurrentCooldown = 0.0f;
@@ -79,6 +84,11 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(FireballCooldown());
         StartCoroutine(ElectricArcCooldown());
         StartCoroutine(RotateCooldown());
+
+        // regenerate health if not recently damaged
+        StartCoroutine(HealPlayer());
+        StartCoroutine(RegenEnergy());
+
 
         // recttransforms for spell cooldown displays
         fBallRT = fireballCooldownImage.rectTransform;
@@ -92,6 +102,7 @@ public class PlayerController : MonoBehaviour
 
         // start coroutine to get screen dimensions after first frame renders
         StartCoroutine(GetScreenDimensions());
+
     }
 
     // Update is called once per frame
@@ -119,9 +130,12 @@ public class PlayerController : MonoBehaviour
         String prediction = handTracking.GetPosePrediction();
         ActionManager(prediction);
 
+        UpdateScore();
+        string formattedScore = scoreDisplay.ToString("D6");
+        scoreText.text = String.Format("{0:n0}", int.Parse(formattedScore));
+
         debugText.text = string.Format("{0}\n{1}\n{2}", fireballCurrentCooldown, energyCooldown, prediction);
     }
-
     private IEnumerator GetScreenDimensions()
     {
         yield return null;
@@ -208,6 +222,36 @@ public class PlayerController : MonoBehaviour
         // need to add effects
     }
 
+    private IEnumerator FireballCooldown()
+    {
+        while (true) {
+            if (fireballCurrentCooldown > 0) {
+                yield return new WaitForSeconds(0.05f);
+                if (fireballCurrentCooldown - 0.05f < 0) {
+                    fireballCurrentCooldown = 0f;
+                } else {
+                    fireballCurrentCooldown -= 0.05f;
+                }
+            } else {
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+    }
+    private IEnumerator ElectricArcCooldown()
+    {
+        while (true) {
+            if (electricArcCurrentCooldown > 0) {
+                yield return new WaitForSeconds(0.05f);
+                if (electricArcCurrentCooldown - 0.05f < 0) {
+                    electricArcCurrentCooldown = 0f;
+                } else {
+                    electricArcCurrentCooldown -= 0.05f;
+                }
+            } else {
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+    }
     public void Fireball()
     {
         GameObject spell;
@@ -225,10 +269,24 @@ public class PlayerController : MonoBehaviour
         spell.transform.localRotation = shootFromHand.GetRotation();
         DrainEnergy(electricArcEnergy);
     }
+    // managing player damage
     public void Damage(float amount) {
         health -= amount;
         healingCooldown = timeHealAfterDamage;
     }
+    // managing player score
+    public void AddScore(int amount) => scoreTarget += amount;    
+    private void UpdateScore()
+    {
+        if (scoreTarget > scoreDisplay) {
+            if (scoreDisplay + growthAmount < scoreTarget) {
+                scoreDisplay += growthAmount;
+            } else {
+                scoreDisplay = scoreTarget;
+            }
+        }
+    }
+
     private IEnumerator HealPlayer()
     {
         while (true) {
@@ -261,36 +319,6 @@ public class PlayerController : MonoBehaviour
             } else {
                 yield return new WaitForSeconds(0.1f);
                 energyCooldown -= 0.1f;
-            }
-        }
-    }
-    private IEnumerator FireballCooldown()
-    {
-        while (true) {
-            if (fireballCurrentCooldown > 0) {
-                yield return new WaitForSeconds(0.05f);
-                if (fireballCurrentCooldown - 0.05f < 0) {
-                    fireballCurrentCooldown = 0f;
-                } else {
-                    fireballCurrentCooldown -= 0.05f;
-                }
-            } else {
-                yield return new WaitForSeconds(0.05f);
-            }
-        }
-    }
-    private IEnumerator ElectricArcCooldown()
-    {
-        while (true) {
-            if (electricArcCurrentCooldown > 0) {
-                yield return new WaitForSeconds(0.05f);
-                if (electricArcCurrentCooldown - 0.05f < 0) {
-                    electricArcCurrentCooldown = 0f;
-                } else {
-                    electricArcCurrentCooldown -= 0.05f;
-                }
-            } else {
-                yield return new WaitForSeconds(0.05f);
             }
         }
     }

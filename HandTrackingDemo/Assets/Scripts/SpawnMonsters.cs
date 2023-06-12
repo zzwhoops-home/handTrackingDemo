@@ -56,4 +56,5 @@ public class SpawnMonsters : MonoBehaviour
             }
         }
     }
+    public int GetRound() => round;
 }

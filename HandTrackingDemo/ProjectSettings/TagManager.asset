@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Monster
   - PlayerCollider
+  - GameManager
   layers:
   - Default
   - TransparentFX
