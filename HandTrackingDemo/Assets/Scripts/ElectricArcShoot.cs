@@ -32,13 +32,6 @@ public class ElectricArcShoot : MonoBehaviour
     {
         transform.position += transform.forward * speed * Time.deltaTime;
     }
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Monster")) {
-            other.GetComponent<MeleeMonster>().Damage(damage);
-            Destroy(gameObject);
-        }
-    }
     private IEnumerator TryRaycastTarget() {
         Ray ray = shootFromHand.handRay;
         RaycastHit hitData;
@@ -49,7 +42,7 @@ public class ElectricArcShoot : MonoBehaviour
                 float cooldown = 0.1f;
                 if (collider.CompareTag("Monster")) {
                     pos4.transform.position = hitData.point;
-                    collider.gameObject.GetComponent<MeleeMonster>().Damage(damage * cooldown);
+                    collider.gameObject.GetComponent<Damageable>().Damage(damage * cooldown);
                     distance = hitData.distance;
                     LightningCurve();
                 }

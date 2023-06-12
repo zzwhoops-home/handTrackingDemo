@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 2980670418357543686}
   - component: {fileID: 2980670418357543687}
   - component: {fileID: 8023960324998971443}
+  - component: {fileID: -3539546999354377702}
   m_Layer: 0
   m_Name: MeleeMonster
   m_TagString: Monster
@@ -193,6 +194,19 @@ MonoBehaviour:
   speed: 0
   damage: 10
   offset: 0.75
+--- !u!114 &-3539546999354377702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2980670418357543684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 799471e2518d4d14998f74f08a5f0848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dmgIndicator: {fileID: 3764493744522674616, guid: f04b5e89546a83f438b2661df10ac425, type: 3}
   maxHealth: 20
   healthBar: {fileID: 857636024085624694}
 --- !u!1 &5644275968524002947

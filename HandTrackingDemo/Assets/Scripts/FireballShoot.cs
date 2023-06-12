@@ -26,7 +26,7 @@ public class FireballShoot : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Monster")) {
-            other.GetComponent<MeleeMonster>().Damage(damage);
+            other.GetComponent<Damageable>().Damage(damage);
             Destroy(gameObject);
         }
     }

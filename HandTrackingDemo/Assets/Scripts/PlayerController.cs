@@ -199,7 +199,6 @@ public class PlayerController : MonoBehaviour
     private void Recharge()
     {
         // need to add effects
-        print("recharging");
     }
 
     public void Fireball()
