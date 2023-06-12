@@ -298,8 +298,9 @@ public class PlayerController : MonoBehaviour
     private void UpdateScore()
     {
         if (scoreTarget > scoreDisplay) {
-            if (scoreDisplay + growthAmount < scoreTarget) {
-                scoreDisplay += growthAmount;
+            int growth = Mathf.Max((scoreTarget - scoreDisplay) / 30, growthAmount);
+            if (scoreDisplay + growth < scoreTarget) {
+                scoreDisplay += growth;
             } else {
                 scoreDisplay = scoreTarget;
             }
