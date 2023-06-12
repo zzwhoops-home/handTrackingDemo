@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
 
     public TextMeshProUGUI gameOverScoreText;
     public GameObject gameOverPanel;
+    public GameObject winScreen;
     private int scoreTarget;
     private int scoreDisplay;
     public TextMeshProUGUI scoreText;
@@ -70,8 +71,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // at the start, player starts at max HP, 0 score, and game over is not enabled
+        // at the start, player starts at max HP, 0 score, win screen and game over are not enabled
         gameOverPanel.SetActive(false);
+        gameOverScoreText.gameObject.SetActive(false);
+        winScreen.SetActive(false);
         scoreTarget = 0;
         health = maxHealth;
         energy = maxEnergy;
@@ -131,8 +134,7 @@ public class PlayerController : MonoBehaviour
         ActionManager(prediction);
 
         UpdateScore();
-        string formattedScore = scoreDisplay.ToString("D6");
-        scoreText.text = String.Format("{0:n0}", int.Parse(formattedScore));
+        scoreText.text = FormatScore(scoreDisplay);
 
         debugText.text = string.Format("{0}\n{1}\n{2}", fireballCurrentCooldown, energyCooldown, prediction);
     }
@@ -271,8 +273,26 @@ public class PlayerController : MonoBehaviour
     }
     // managing player damage
     public void Damage(float amount) {
-        health -= amount;
-        healingCooldown = timeHealAfterDamage;
+        if (health - amount <= 0) {
+            Lose();
+        } else {
+            health -= amount;
+            healingCooldown = timeHealAfterDamage;
+        }
+    }
+    public void Lose() {
+        health = 0f;
+        gameOverPanel.SetActive(true);
+        GameOver();
+    }
+    public void Win() {
+        winScreen.SetActive(true);
+        GameOver();
+    }
+    public void GameOver() {
+        gameOverScoreText.gameObject.SetActive(true);
+        gameOverScoreText.text = String.Format("Score: {0}", FormatScore(scoreTarget));
+        Time.timeScale = 0f;
     }
     // managing player score
     public void AddScore(int amount) => scoreTarget += amount;    
@@ -285,6 +305,10 @@ public class PlayerController : MonoBehaviour
                 scoreDisplay = scoreTarget;
             }
         }
+    }
+    private string FormatScore(int score) {
+        string formattedScore = score.ToString("D6");
+        return(String.Format("{0:n0}", int.Parse(formattedScore)));
     }
 
     private IEnumerator HealPlayer()

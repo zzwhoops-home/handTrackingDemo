@@ -37,9 +37,9 @@ public class ElectricArcShoot : MonoBehaviour
         RaycastHit hitData;
 
         while (true) {
+            float cooldown = 0.1f;
             if (Physics.Raycast(ray, out hitData, maxLength)) {
                 var collider = hitData.collider;
-                float cooldown = 0.1f;
                 if (collider.CompareTag("Monster")) {
                     pos4.transform.position = hitData.point;
                     collider.gameObject.GetComponent<Damageable>().Damage(damage * cooldown);
@@ -47,7 +47,7 @@ public class ElectricArcShoot : MonoBehaviour
                     LightningCurve();
                 }
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(cooldown);
         }
     }
     private void LightningCurve() {

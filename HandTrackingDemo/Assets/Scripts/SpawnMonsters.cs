@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SpawnMonsters : MonoBehaviour
 {
@@ -11,22 +12,22 @@ public class SpawnMonsters : MonoBehaviour
     public int numRounds = 10;
     public float spawnRadius = 3f;
     private bool roundEnd = false;
+    private PlayerController playerController;
+    public TextMeshProUGUI roundText;
 
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(Spawn());
         StartCoroutine(RoundDetector());
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
+
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
     private IEnumerator Spawn() 
     {
         for (int i = 0; i < numRounds; i++) {
             round++;
+            roundText.text = string.Format("Round: {0}/{1}", round, numRounds);
             for (int m = 0 ; m < round * 3; m++) {
                 // spawn from random spawnpoint in world
                 int spawn = Random.Range(0, 4);
@@ -37,10 +38,15 @@ public class SpawnMonsters : MonoBehaviour
                 
                 // spawn monster
                 Instantiate(monsters[0], randomSpawnPoint, Quaternion.identity);
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.2f);
             }
-            yield return new WaitUntil(() => roundEnd);
-            yield return new WaitForSeconds(10f);
+            if (round == numRounds) {
+                yield return new WaitUntil(() => roundEnd);
+                playerController.Win();
+            } else {
+                yield return new WaitUntil(() => roundEnd);
+                yield return new WaitForSeconds(10f);
+            }
         }
     }
     private IEnumerator RoundDetector()
