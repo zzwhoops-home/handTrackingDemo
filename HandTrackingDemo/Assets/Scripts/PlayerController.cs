@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     public float hurtThreshold = 0.25f;
     public TextMeshProUGUI energyText;
     public Slider healthBar;
+    public Animation healthBarShake;
     public Slider energyBar;
     public Image fireballCooldownImage;
     public Image electricArcCooldownImage;
@@ -172,6 +173,7 @@ public class PlayerController : MonoBehaviour
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
     } 
     public void ActionManager(String prediction) {
+        print(prediction);
         if (prediction == "neutral") {
             Recharge();
         } else if (prediction == "pointer_left") {
@@ -293,6 +295,9 @@ public class PlayerController : MonoBehaviour
             float angle = Vector3.SignedAngle(playerForward, playerToDamager, Vector3.up);
             GameObject img = Instantiate(hurtDirectionImage, hurtDirectionImageParent);
             img.GetComponent<RectTransform>().Rotate(Vector3.forward, -angle, Space.World);
+            if (!healthBarShake.isPlaying) {
+                healthBarShake.Play();
+            }
         }
     }
     public void Lose() {

@@ -119,7 +119,7 @@ MonoBehaviour:
   pos2: {fileID: 8032843613554379964}
   pos3: {fileID: 3600322072383734160}
   pos4: {fileID: 3730149490996986448}
-  damage: 30
+  damage: 40
 --- !u!1 &7315520362147544425
 GameObject:
   m_ObjectHideFlags: 0

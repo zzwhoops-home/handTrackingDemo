@@ -39,7 +39,7 @@ public class ElectricArcShoot : MonoBehaviour
         RaycastHit hitData;
 
         while (true) {
-            float cooldown = 0.1f;
+            float cooldown = 0.05f;
             if (Physics.Raycast(ray, out hitData, maxLength)) {
                 var collider = hitData.collider;
                 if (collider.CompareTag("Monster")) {
