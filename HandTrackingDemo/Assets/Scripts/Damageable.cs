@@ -19,6 +19,7 @@ public class Damageable : MonoBehaviour
     public Slider healthBar;
     // get current round in start function
     private int round;
+    public GameObject mMonsterDestroy;
     
     // Start is called before the first frame update
     void Start()
@@ -61,9 +62,18 @@ public class Damageable : MonoBehaviour
         ind.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-force, force), 0f, Random.Range(-force, force)));
     }
     public void SelfDestroyed() {
+        if (gameObject.CompareTag("Monster")) {
+            Instantiate(mMonsterDestroy, transform.position, Quaternion.identity);
+        }
         float distance = Vector3.Distance(gameObject.transform.position, player.transform.position);
         int value = (50 + (int) (distance * distanceMultiplier)) + (round * 25);
         playerController.AddScore(value);
+        Destroy(gameObject);
+    }
+    public void SelfDestroyedNoKill() {
+        if (gameObject.CompareTag("Monster")) {
+            Instantiate(mMonsterDestroy, transform.position, Quaternion.identity);
+        }
         Destroy(gameObject);
     }
 }

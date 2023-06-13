@@ -14,6 +14,7 @@ public class ElectricArcShoot : MonoBehaviour
     public GameObject pos2;
     public GameObject pos3;
     public GameObject pos4;
+    private Vector3 pos4Original;
     private ShootFromHand shootFromHand;
 
     public float damage = 10f;
@@ -21,10 +22,11 @@ public class ElectricArcShoot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, lifetime);
-
         shootFromHand = GameObject.FindGameObjectWithTag("Player").GetComponent<ShootFromHand>();
         StartCoroutine(TryRaycastTarget());
+        StartCoroutine(DestroyObject());
+
+        pos4Original = pos4.transform.position;
     }
 
     // Update is called once per frame
@@ -49,6 +51,12 @@ public class ElectricArcShoot : MonoBehaviour
             }
             yield return new WaitForSeconds(cooldown);
         }
+    }
+    private IEnumerator DestroyObject()
+    {
+        yield return new WaitForSeconds(lifetime);
+        pos4.transform.position = pos4Original;
+        Destroy(gameObject);
     }
     private void LightningCurve() {
         Vector3 min = pos1.transform.position;

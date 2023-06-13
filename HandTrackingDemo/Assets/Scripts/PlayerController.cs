@@ -45,6 +45,11 @@ public class PlayerController : MonoBehaviour
     public float energyGainAmount = 2f;
     private float energyCooldown;
     public TextMeshProUGUI healthText;
+    public Image hurtImage;
+    public GameObject hurtDirectionImage;
+    public Transform hurtDirectionImageParent;
+    [Range(0.0f, 0.9f)]
+    public float hurtThreshold = 0.25f;
     public TextMeshProUGUI energyText;
     public Slider healthBar;
     public Slider energyBar;
@@ -52,6 +57,7 @@ public class PlayerController : MonoBehaviour
     public Image electricArcCooldownImage;
     public Image rotateCooldownImage_1;
     public Image rotateCooldownImage_2;
+    public Image facingImage;
     private RectTransform fBallRT;
     private RectTransform eArcRT;
     private float fBallImageHeight;
@@ -88,9 +94,14 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(ElectricArcCooldown());
         StartCoroutine(RotateCooldown());
 
-        // regenerate health if not recently damaged
+        // regenerate health if not recently damaged. Also add health warning effect and make sure it is transparent at the start of the game
         StartCoroutine(HealPlayer());
         StartCoroutine(RegenEnergy());
+        StartCoroutine(HurtImage());
+
+        Color hurtImageColor = hurtImage.color;
+        hurtImageColor.a = 0f;
+        hurtImage.color = hurtImageColor;
 
         // recttransforms for spell cooldown displays
         fBallRT = fireballCooldownImage.rectTransform;
@@ -144,7 +155,6 @@ public class PlayerController : MonoBehaviour
         screenWidth = Screen.width;
         screenHeight = Screen.height;
     }
-
     private void UpdateCrosshair()
     {
         // get center xy values
@@ -161,7 +171,6 @@ public class PlayerController : MonoBehaviour
 
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
     } 
-
     public void ActionManager(String prediction) {
         if (prediction == "neutral") {
             Recharge();
@@ -169,6 +178,7 @@ public class PlayerController : MonoBehaviour
             if (rotateCurrentCooldown <= 0f) {
                 // rotate 90 deg left
                 cam.transform.Rotate(Vector3.up, -90f, Space.World);
+                facingImage.rectTransform.Rotate(Vector3.forward, 90f, Space.World);
                 rotateCurrentCooldown = rotateCooldown;
 
                 // set back to neutral so things don't go haywire
@@ -178,6 +188,7 @@ public class PlayerController : MonoBehaviour
             if (rotateCurrentCooldown <= 0f) {
                 // rotate 90 deg right
                 cam.transform.Rotate(Vector3.up, 90f, Space.World);
+                facingImage.rectTransform.Rotate(Vector3.forward, -90f, Space.World);
                 rotateCurrentCooldown = rotateCooldown;
 
                 // set back to neutral so things don't go haywire
@@ -217,12 +228,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     private void Recharge()
     {
         // need to add effects
     }
-
     private IEnumerator FireballCooldown()
     {
         while (true) {
@@ -261,7 +270,6 @@ public class PlayerController : MonoBehaviour
         spell.transform.localRotation = shootFromHand.GetRotation();
         DrainEnergy(fireballEnergy);
     }
-
     public void ElectricArc()
     {
         GameObject spell;
@@ -271,12 +279,20 @@ public class PlayerController : MonoBehaviour
         DrainEnergy(electricArcEnergy);
     }
     // managing player damage
-    public void Damage(float amount) {
+    public void Damage(float amount, Vector3 enemyPos) {
         if (health - amount <= 0) {
             Lose();
         } else {
             health -= amount;
             healingCooldown = timeHealAfterDamage;
+            
+            Vector3 playerForward = cam.transform.forward;
+            Vector3 playerToDamager = enemyPos - transform.position;
+            playerToDamager.y = 0f;
+            
+            float angle = Vector3.SignedAngle(playerForward, playerToDamager, Vector3.up);
+            GameObject img = Instantiate(hurtDirectionImage, hurtDirectionImageParent);
+            img.GetComponent<RectTransform>().Rotate(Vector3.forward, -angle, Space.World);
         }
     }
     public void Lose() {
@@ -310,7 +326,6 @@ public class PlayerController : MonoBehaviour
         string formattedScore = score.ToString("D6");
         return(String.Format("{0:n0}", int.Parse(formattedScore)));
     }
-
     private IEnumerator HealPlayer()
     {
         while (true) {
@@ -344,6 +359,22 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
                 energyCooldown -= 0.1f;
             }
+        }
+    }
+    private IEnumerator HurtImage() {
+        while (true) {
+            yield return new WaitForSeconds(0.1f);
+            float alpha = 0f;
+            if (health < (hurtThreshold * maxHealth)) {
+                if (health < ((hurtThreshold / 2) * maxHealth)) {
+                    alpha = 1.0f;
+                } else {
+                    alpha = 0.5f;
+                }
+            }
+            Color hurtImageColor = hurtImage.color;
+            hurtImageColor.a = alpha;
+            hurtImage.color = hurtImageColor;
         }
     }
 }

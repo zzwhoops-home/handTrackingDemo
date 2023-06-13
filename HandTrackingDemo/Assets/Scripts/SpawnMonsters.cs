@@ -14,6 +14,8 @@ public class SpawnMonsters : MonoBehaviour
     private bool roundEnd = false;
     private PlayerController playerController;
     public TextMeshProUGUI roundText;
+    public TextMeshProUGUI roundCompleteText;
+    private Animation roundCompleteAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -22,12 +24,14 @@ public class SpawnMonsters : MonoBehaviour
         StartCoroutine(RoundDetector());
 
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        roundCompleteAnim = roundCompleteText.gameObject.GetComponent<Animation>();
     }
     private IEnumerator Spawn() 
     {
         for (int i = 0; i < numRounds; i++) {
             round++;
             roundText.text = string.Format("Round: {0}/{1}", round, numRounds);
+
             for (int m = 0 ; m < round * 3; m++) {
                 // spawn from random spawnpoint in world
                 int spawn = Random.Range(0, 4);
@@ -42,10 +46,14 @@ public class SpawnMonsters : MonoBehaviour
             }
             if (round == numRounds) {
                 yield return new WaitUntil(() => roundEnd);
+                roundCompleteText.text = string.Format("Round {0}\nComplete", round);
+                roundCompleteAnim.Play();
                 playerController.Win();
             } else {
                 yield return new WaitUntil(() => roundEnd);
-                yield return new WaitForSeconds(10f);
+                roundCompleteText.text = string.Format("Round {0}\nComplete", round);
+                roundCompleteAnim.Play();
+                yield return new WaitForSeconds(7f);
             }
         }
     }

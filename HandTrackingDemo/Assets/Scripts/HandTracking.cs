@@ -28,7 +28,6 @@ public class HandTracking : MonoBehaviour
         recentPredictions = new Queue<String>();
 
         threshold = (int) Mathf.Round(maxRecent * thresholdRange);
-        print(threshold);
         StartCoroutine(Prediction());
     }
 
@@ -112,8 +111,8 @@ public class HandTracking : MonoBehaviour
             }
         }
         // print(String.Format("{0} {1}", maxCount, posePrediction));
-        string queueContents = string.Join(", ", recentPredictions.ToArray());
-        print(queueContents);
+        // string queueContents = string.Join(", ", recentPredictions.ToArray());
+        // print(queueContents);
         if (maxCount > threshold) {
             return posePrediction;
         } else {

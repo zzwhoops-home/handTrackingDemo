@@ -213,6 +213,7 @@ MonoBehaviour:
   force: 3
   distanceMultiplier: 5
   healthBar: {fileID: 857636024085624694}
+  mMonsterDestroy: {fileID: 6473217712700641774, guid: 27b4fe5a89f0e3f4ea5170f80d57bc3c, type: 3}
 --- !u!1 &5299085147993705817
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +226,7 @@ GameObject:
   - component: {fileID: 7551638630925359958}
   - component: {fileID: 5938443093017610979}
   m_Layer: 7
-  m_Name: Cube
+  m_Name: MinimapDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

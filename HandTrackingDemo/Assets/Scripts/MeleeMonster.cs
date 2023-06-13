@@ -6,6 +6,7 @@ public class MeleeMonster : MonoBehaviour
 {
     private GameObject player;
     private PlayerController playerController;
+    private Damageable damageable;
     public float minSpeed = 1.5f;
     public float maxSpeed = 2.0f;
     [SerializeField]
@@ -21,6 +22,7 @@ public class MeleeMonster : MonoBehaviour
         speed = Random.Range(minSpeed, maxSpeed);
         destination = PlayerLocation();
         transform.LookAt(destination);
+        damageable = GetComponent<Damageable>();
     }
 
     // Update is called once per frame
@@ -38,7 +40,8 @@ public class MeleeMonster : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PlayerCollider")) {
-            playerController.Damage(damage);
+            damageable.SelfDestroyedNoKill();
+            playerController.Damage(damage, gameObject.transform.position);
             Destroy(gameObject);
         }
     }
