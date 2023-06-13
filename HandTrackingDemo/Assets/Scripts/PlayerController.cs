@@ -173,7 +173,6 @@ public class PlayerController : MonoBehaviour
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0f);
     } 
     public void ActionManager(String prediction) {
-        print(prediction);
         if (prediction == "neutral") {
             Recharge();
         } else if (prediction == "pointer_left") {
@@ -182,9 +181,6 @@ public class PlayerController : MonoBehaviour
                 cam.transform.Rotate(Vector3.up, -90f, Space.World);
                 facingImage.rectTransform.Rotate(Vector3.forward, 90f, Space.World);
                 rotateCurrentCooldown = rotateCooldown;
-
-                // set back to neutral so things don't go haywire
-                prediction = "neutral";
             }
         } else if (prediction == "pointer_right") {
             if (rotateCurrentCooldown <= 0f) {
@@ -192,9 +188,6 @@ public class PlayerController : MonoBehaviour
                 cam.transform.Rotate(Vector3.up, 90f, Space.World);
                 facingImage.rectTransform.Rotate(Vector3.forward, -90f, Space.World);
                 rotateCurrentCooldown = rotateCooldown;
-
-                // set back to neutral so things don't go haywire
-                prediction = "neutral";
             }
         }
         else {
